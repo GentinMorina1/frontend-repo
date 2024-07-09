@@ -63,7 +63,8 @@ function App() {
         <Col className="second-column" md={8}>
      <button onClick={renderFirstSignature}>First</button>
 <div style={(activeComponent === 'A')? {display:"block"}: {display:"none"}}> <Signature2 formData={formData}
-            setFormData={setFormData} cropperRef={cropperRef}/></div>
+            setFormData={setFormData} showEdit={showEdit}
+            setShowEdit={setShowEdit} cropperRef={cropperRef}/></div>
             <button onClick={renderSecondSignature}>second</button>
 <div style={(activeComponent === 'B')? {display:"block"}: {display:"none"}} ><Signature formData={formData} showEdit={showEdit}
             setShowEdit={setShowEdit} /></div>

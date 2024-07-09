@@ -28,7 +28,7 @@ export default function Signature({
           <div className="username">
             <span>
               <b>
-                {formData.name} {formData.lastName}
+                {formData.name} {formData.last_name}
               </b>
             </span>
             <div>
@@ -142,25 +142,25 @@ export default function Signature({
         </div>
 
         <div className="company-logos">
-          {formData.companyLogo && (
+          {formData.company_logo && (
             <img
               className=""
               style={{ width: "100px" }}
-              src={URL.createObjectURL(formData.companyLogo)}
+              src={URL.createObjectURL(formData.company_logo)}
             />
           )}
-          {formData.companyLogo1 && (
+          {formData.company_logo1 && (
             <img
               className=""
               style={{ width: "100px", "margin-left": "10px" }}
-              src={URL.createObjectURL(formData.companyLogo1)}
+              src={URL.createObjectURL(formData.company_logo1)}
             />
           )}
-          {formData.companyLogo2 && (
+          {formData.company_logo2 && (
             <img
               className=""
               style={{ width: "100px", "margin-left": "10px" }}
-              src={URL.createObjectURL(formData.companyLogo2)}
+              src={URL.createObjectURL(formData.company_logo2)}
             />
           )}
           {formData.companyLogo3 && (

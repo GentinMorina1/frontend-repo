@@ -77,7 +77,7 @@ export default function Signature2({
             <div>
            
                 <span className="username2" style={{ "font-size": "15px", "font-weight": "bold" }}>
-                  {formData.name} {formData.lastName}
+                  {formData.name} {formData.last_name}
                 </span>{" "}
           
               <p className="title-company2">
@@ -99,8 +99,8 @@ export default function Signature2({
                   {formData.email}
                 </a>
               )}
-              {formData.meetingLink && (
-                <a className="links2" href={formData.meetingLink}>
+              {formData.meeting_link && (
+                <a className="links2" href={formData.meeting_link}>
                   <img
                     className="meeting-logo2"
                     src={meetingLogo}
@@ -109,8 +109,8 @@ export default function Signature2({
                   Meeting Link{" "}
                 </a>
               )}
-              {formData.linkedinProfile && (
-                <a className="links2" href={formData.linkedinProfile}>
+              {formData.linkedin_profile && (
+                <a className="links2" href={formData.linkedin_profile}>
                   <img
                     className="logos2"
                     src={linkedinLogo}
@@ -198,26 +198,26 @@ export default function Signature2({
           </div>
         </div>
         <div className="companies2">
-        {formData.companyLogo && (
+        {formData.company_logo && (
             <img
             className="company-logo2"
              style={{width:"100px"}}
-             src={URL.createObjectURL(formData.companyLogo)}
+             src={URL.createObjectURL(formData.company_logo)}
              />
            )}
-           {formData.companyLogo1 && (
+           {formData.company_logo1 && (
             <img
                className=""
                style={{width:"200px"}}
-               src={URL.createObjectURL(formData.companyLogo1)}
+               src={URL.createObjectURL(formData.company_logo1)}
              />
            )}
-           {formData.companyLogo2 && (
+           {formData.company_logo2 && (
             <img
                className=""
                style={{width:"150px"}}
 
-               src={URL.createObjectURL(formData.companyLogo2)}
+               src={URL.createObjectURL(formData.company_logo2)}
              />
            )}
         </div>
@@ -226,38 +226,15 @@ export default function Signature2({
             <p className="desc-test2"> <div dangerouslySetInnerHTML={{ __html: formData.description }} /></p> 
            </span>
         </div>
+        {!showEdit && (
+            <button className="edit-button" onClick={() => setShowEdit(true)}>
+              EDIT
+            </button>
+          )}
       </div>
 
-      {/* 
-<div class="grid-container">
-  <div class="box"> <div className="profile-picture">
-          {formData.image && (
-              <img
-                className="profile-picture"
-                style={{
-                  "border-radius": "50%",
-                  height: "110px",
-                  width: "110px",
-                }}
-                src={URL.createObjectURL(formData.image)}
-              />
-            )}
-            
-          </div></div>
-  <div class="box"> <div className="signature-details"><span>{formData.name} {formData.lastName}</span>
-          <div>{formData.title}
-              {formData.company && <span>,</span>} {formData.company}</div></div>
-          <div className="contact-info">
-          {formData.email && (
-            <a className="contact-links" href={"mailto: " + formData.email}>
-              <img src={emailL} width="13" height="13" border="0" /> Email
-            </a>
-          )}
-          {formData.meetingLink && <a href={formData.meetingLink}><img src={meetingLogo} alt="Meeting Logo"   style={{ width: "16px", height: "15px" }} /> Meeting Link </a>}
-        
-          </div></div>
-  <div class="box box-span-two">New Box</div>
-</div> */}
+    
+
     </>
   );
 }

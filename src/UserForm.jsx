@@ -145,10 +145,10 @@ export default function UserForm({ setShowEdit, formData, setFormData }) {
       feedback: "",
       phone: "",
       email: "",   
-      profilePic:null,
+      image:null,
+      company_logo: null,
       company_logo1: null,
       company_logo2: null,
-      company_logo3: null,
       gif: null,
       description: "",
     });
@@ -356,18 +356,18 @@ setShowEdit(false);
             {" "}
             {statusForm.email && <p>{statusForm.email}</p>}
           </div>
-          <label htmlFor="Profile-img">Profile Picture:</label>
+          <label htmlFor="image">Profile Picture:</label>
           <Form.Control
             className="input-form"
             type="file"
             placeholder="Image"
-            name="profilePic"
+            name="image"
             onChange={(e) => {
               setFormData({ ...formData, image: e.target.files[0] });
             }}
           />
           <MemoCropperProfile image={formData.image}/>
-          <label htmlFor="Company-logo">Company Logo:</label>
+          <label htmlFor="company_logo">Company Logo:</label>
           <Form.Control
             className="input-form"
             type="file"
@@ -377,7 +377,7 @@ setShowEdit(false);
               setFormData({ ...formData, company_logo: e.target.files[0] });
             }}
           />
-          <label htmlFor="Company-logo">Company Logo:</label>
+          <label htmlFor="company_logo1">Company Logo:</label>
           <Form.Control
             className="input-form"
             type="file"
@@ -388,7 +388,7 @@ setShowEdit(false);
               setFormData({ ...formData, company_logo1: e.target.files[0] });
             }}
           />
-          <label htmlFor="Company-logo">Company Logo:</label>
+          <label htmlFor="company_logo2">Company Logo:</label>
           <Form.Control
             className="input-form"
             type="file"
@@ -410,7 +410,7 @@ setShowEdit(false);
               setFormData({ ...formData, companyLogo3: e.target.files[0] });
             }}
           /> */}
-           <label htmlFor="Gif-logo">Gif </label>
+           <label htmlFor="gif">Gif </label>
           <Form.Control
             className="input-form"
             type="file"
