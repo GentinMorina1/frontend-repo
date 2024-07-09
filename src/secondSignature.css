@@ -1,0 +1,204 @@
+/* .grid-container {
+  display: grid;
+  gap: 10px;
+  background-color: #2196F3;
+  padding: 10px;
+}
+
+.box {
+  background-color: rgba(255, 255, 255, 0.8);
+  padding: 20px;
+}
+
+.box:nth-child(1) {
+  grid-column: 1;
+  grid-row: 1;
+}
+
+.box:nth-child(2) {
+  grid-column: 2;
+  grid-row: 1;
+}
+
+.box.box-span-two {
+  grid-column: span 2;
+  grid-row: 2;
+}
+
+.profile-picture {
+  text-align: center;
+}
+
+.profile-picture img {
+  border-radius: 50%;
+  height: 110px;
+  width: 110px;
+}
+
+.signature-details {
+  text-align: center;
+}
+
+.contact-info {
+  margin-top: 10px;
+}
+
+.contact-info a {
+  display: block;
+  margin-bottom: 5px;
+}
+.profile-picture {
+  box-sizing: border-box;
+}
+.profile-picture img {
+  border-radius: 50%;
+  height: 110px;
+  width: 110px;
+  display: block; 
+  margin: 0 auto; 
+}
+ */
+ body{
+ margin: 8px; 
+ }
+ input[type=number]::-webkit-inner-spin-button, 
+input[type=number]::-webkit-outer-spin-button { 
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    margin: 0; 
+}
+.signature-content2{
+  display: flex;
+  margin-top: 8px;
+}
+.signature-details2{
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  justify-content: center;
+  margin-left: 25px;
+}
+
+.profile-picture2{
+  margin-top: 16px;
+}
+
+.logos2{
+  margin-left: 4px;
+  margin-right: 4px;
+  width: 16px;
+  height: 16px;
+}
+.links2{
+  font-size: 9px;
+  line-height: 14px;
+  font-family: Verdana, "Verdana Ref", sans-serif;
+  color: rgb(0, 0, 0);
+  margin-right: 4px;
+  text-decoration: underline;
+}
+.web-phone-content2{
+  font-family: Verdana, "Verdana Ref", sans-serif;
+    color: rgb(0, 0, 0);
+    font-size: 10.5px;
+    line-height: 16px;
+    margin-right: 4px;
+    text-decoration: underline;
+}
+.meeting-logo2{
+  width: 16px;
+  height: 15px;
+  margin-left: 4px;
+  margin-right: 4px;
+}
+#horizontal-line2{
+  width: 350px;
+}
+.title-company2{
+  font-weight:bold;
+  font-size:12px;
+  margin:0px;
+  font-family: Verdana, "Verdana Ref", sans-serif;
+    color: rgb(0, 0, 0);
+ 
+    line-height: 18px;
+    padding-top: 2px;
+    padding-bottom: 5px;
+}
+.address2{
+ font-size: 10.5px;
+ font-family: Verdana, "Verdana Ref", sans-serif;
+    color: rgb(0, 0, 0);
+    line-height: 16px;
+}
+.address-logo2{
+  width: 13px;
+  height: 16px;
+  margin-right: 4px;
+  margin-left: 4px;
+}
+.anchor-link2{
+color: black;
+margin: 0.1px;
+
+}
+.social-media-logo2{
+  width: 22px;
+  height: 22px;
+  margin-right: 4px;
+}
+.facebook-logo2{
+  width: 11px;
+  height: 11px;
+}
+.feedback-content2{
+  font-family: Verdana, "Verdana Ref", sans-serif;
+    color: rgb(0, 0, 0);
+    font-size: 9px;
+    height: 22px;
+    padding-top: 0px;
+    margin-left: 30px;
+   
+}
+
+.description-area2{
+  max-width: 500px;
+  font-family: Verdana,"Verdana Ref",sans-serif;
+  color: rgb(0,0,0);
+  font-size: 9px;
+  line-height: 16px;
+  padding-top: 0px;
+}
+hr{
+  border-bottom: 1px solid rgb(13, 98, 126);
+  margin: 0;
+  width: 350px;
+}
+.description2{
+  max-width: 500px;
+}
+.desc-test2{
+  max-width: 500px;
+}
+.img-preview2 {
+  overflow: hidden;
+margin-top: 30px;
+}
+.img-preview{
+  overflow: hidden;
+  margin-top: 30px;
+}
+.username2{
+  font-family: Verdana, "Verdana Ref", sans-serif;
+    color: rgb(0, 0, 0);
+    font-size: 9px;
+    line-height: 20px;
+}
+.companies2{
+  width: 450px;
+}
+.mail-logo2{
+  margin-left: 4px;
+  margin-right: 4px;
+}
