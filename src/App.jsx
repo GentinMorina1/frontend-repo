@@ -16,10 +16,10 @@ import "./secondSignature.css";
 function App() {
   const [formData, setFormData] = useState({
     name: "",
-    lastName: "",
+    last_name: "",
     title: "",
     company: "",
-    linkedinProfile: "",
+    linkedin_profile: "",
     phone: "",
     email: "",
     facebook: "",
@@ -28,10 +28,10 @@ function App() {
     description: "",
     website: "",
     address: "",
-    companyLogo: null,
-    companyLogo1: null,
-    companyLogo2: null,
-    companyLogo3: null,
+    company_logo: null,
+    company_logo1: null,
+    company_logo2: null,
+   
     meetingLink:"",
     x:"",
     companyLinkedin:"",

@@ -122,7 +122,7 @@ export default function UserForm({ setShowEdit, formData, setFormData }) {
   console.log('Form Data:', formData);
 
   try {
-    const response = await axios.post('http://localhost:8000/api/users', fd, {
+    const response = await axios.post('http://backend.test/api/users', fd, {
         headers: {
             'Content-Type': 'multipart/form-data',
         },
@@ -131,7 +131,7 @@ export default function UserForm({ setShowEdit, formData, setFormData }) {
     alert('Form submitted successfully!');
     setFormData({
       name: "",
-      lastName: "",
+      last_name: "",
       title: "",
       company: "",
       meetingLink: "",
@@ -139,16 +139,16 @@ export default function UserForm({ setShowEdit, formData, setFormData }) {
       website: "",
       x: "",
       companyLinkedin: "",
-      linkedinProfile:"",
+      linkedin_profile:"",
       facebook: "",
       instagram: "",
       feedback: "",
       phone: "",
       email: "",   
       profilePic:null,
-      "company-logo1": null,
-      "company-logo2": null,
-      "company-logo3": null,
+      company_logo1: null,
+      company_logo2: null,
+      company_logo3: null,
       gif: null,
       description: "",
     });
@@ -203,11 +203,11 @@ setShowEdit(false);
             className="input-form"
             required
             type="text"
-            name="lastName"
+            name="last_name"
             placeholder="Last name"
-            value={formData.lastName}
+            value={formData.last_name}
             onChange={(e) => {
-              setFormData({ ...formData, lastName: e.target.value });
+              setFormData({ ...formData, last_name: e.target.value });
             }}
           />
           <Form.Control
@@ -371,32 +371,32 @@ setShowEdit(false);
           <Form.Control
             className="input-form"
             type="file"
+            name="company_logo"
+            placeholder="Company Logo"
+            onChange={(e) => {
+              setFormData({ ...formData, company_logo: e.target.files[0] });
+            }}
+          />
+          <label htmlFor="Company-logo">Company Logo:</label>
+          <Form.Control
+            className="input-form"
+            type="file"
             name="company-logo1"
+
             placeholder="Company Logo"
             onChange={(e) => {
-              setFormData({ ...formData, companyLogo: e.target.files[0] });
+              setFormData({ ...formData, company_logo1: e.target.files[0] });
             }}
           />
           <label htmlFor="Company-logo">Company Logo:</label>
           <Form.Control
             className="input-form"
             type="file"
-            name="company-logo2"
+            name="company_logo2"
 
             placeholder="Company Logo"
             onChange={(e) => {
-              setFormData({ ...formData, companyLogo1: e.target.files[0] });
-            }}
-          />
-          <label htmlFor="Company-logo">Company Logo:</label>
-          <Form.Control
-            className="input-form"
-            type="file"
-            name="company-logo3"
-
-            placeholder="Company Logo"
-            onChange={(e) => {
-              setFormData({ ...formData, companyLogo2: e.target.files[0] });
+              setFormData({ ...formData, company_logo2: e.target.files[0] });
             }}
           />
           {/* <label htmlFor="Company-logo">Company Logo:</label>
