@@ -5,10 +5,10 @@ import { faLinkedin } from "@fortawesome/free-brands-svg-icons";
 import { faInstagram } from "@fortawesome/free-brands-svg-icons";
 import { faFacebook } from "@fortawesome/free-brands-svg-icons";
 import "./index.css";
-import photo from "/Users/gentin/Desktop/EmailSignature/src/images/address.png";
-import emailL from "/Users/gentin/Desktop/EmailSignature/src/images/email.png";
-import phoneE from "/Users/gentin/Desktop/EmailSignature/src/images/phone.png";
-import web from "/Users/gentin/Desktop/EmailSignature/src/images/web.png";
+import photo from "/assets/images/address.png";
+import emailL from "/assets/images/email.png";
+import phoneE from "/assets/images/phone.png";
+import web from "/assets/images/web.png";
 import App from "./App";
 import { left } from "@popperjs/core";
 
