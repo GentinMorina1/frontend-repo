@@ -31,8 +31,7 @@ function App() {
     company_logo: null,
     company_logo1: null,
     company_logo2: null,
-   
-    meetingLink:"",
+    meeting_link:"",
     x:"",
     companyLinkedin:"",
     feedback:"",

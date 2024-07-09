@@ -234,12 +234,12 @@ setShowEdit(false);
           />
            <Form.Control
               className="input-form"
-              name="meetingLink"
+              name="meeting_link"
               type="url"
               placeholder="Meeting link"
               value={formData.meetingLink}
               onChange={(e) => {
-                setFormData({ ...formData, meetingLink: e.target.value });
+                setFormData({ ...formData, meeting_link: e.target.value });
               }}
             />
           <Form.Control
@@ -288,10 +288,10 @@ setShowEdit(false);
               className="input-form"
               type="url"
               placeholder="Enter your LinkedIn profile URL"
-              name="linkedinProfile"
+              name="linkedin_profile"
               value={formData.linkedinProfile}
               onChange={(e) => {
-                setFormData({ ...formData, linkedinProfile: e.target.value });
+                setFormData({ ...formData, linkedin_profile: e.target.value });
               }}
             />
             <Form.Control
