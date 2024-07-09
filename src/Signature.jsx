@@ -97,10 +97,10 @@ export default function Signature({
             {formData.address}
           </span>
 
-          {formData.linkedinProfile && (
+          {formData.linkedin_profile && (
             <a
               className="anchor-link"
-              href={formData.linkedinProfile}
+              href={formData.linkedin_profile}
               rel="noopener"
               target="_blank"
               data-saferedirecturl
@@ -163,13 +163,13 @@ export default function Signature({
               src={URL.createObjectURL(formData.company_logo2)}
             />
           )}
-          {formData.companyLogo3 && (
+          {/* {formData.companyLogo3 && (
             <img
               className=""
               style={{ width: "100px", "margin-left": "10px" }}
               src={URL.createObjectURL(formData.companyLogo3)}
             />
-          )}
+          )} */}
         </div>
         <div>
           <hr />
@@ -185,7 +185,7 @@ export default function Signature({
           )}
         </div>
       </div>
-    </div>
+    </div> 
     </div>
   );
 }

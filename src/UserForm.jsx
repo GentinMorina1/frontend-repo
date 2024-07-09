@@ -134,11 +134,11 @@ export default function UserForm({ setShowEdit, formData, setFormData }) {
       last_name: "",
       title: "",
       company: "",
-      meetingLink: "",
+      meeting_link: "",
       address: "",
       website: "",
       x: "",
-      companyLinkedin: "",
+      company_linkedin: "",
       linkedin_profile:"",
       facebook: "",
       instagram: "",
@@ -277,10 +277,10 @@ setShowEdit(false);
             className="input-form"
             type="url"
             placeholder="Company Linkedin Profile URL"
-            name="companyLinkedin"
+            name="company_linkedin"
             value={formData.companyLinkedin}
             onChange={(e) => {
-              setFormData({ ...formData, companyLinkedin: e.target.value });
+              setFormData({ ...formData, company_linkedin: e.target.value });
             }}
           />
           <Form.Group className="mb-3">

@@ -27,48 +27,40 @@ export default function Signature2({
   cropperRef
 }) {
 
+  // const handleEditClick = async () => {
+  //   const fd = new FormData();
+  //   for (var key in formData) {
+  //     fd.append(key, formData[key]);
+  //   }
+
+  //   try {
+  //     const response = await axios.put(`http://backend.test/api/users/${formData.id}`, fd);
+  //     console.log(response.data);
+  //     alert('User updated successfully!');
+  //   } catch (error) {
+  //     console.error('There was an error updating the user!', error);
+  //   }
+
+  //   setShowEdit(false);
+  // };
   console.log({cropperRef})
   return (
     <>
   
       <div className="content2">
         <div className="signature-content2">
-          {/* {formData.image && (
-            <img
-              className="profile-picture"
-              style={{
-                "borderRadius": "50%",
-                height: "110px",
-                width: "110px",
-              }}
-              src={URL.createObjectURL(formData.image)}
-            />
-          )} */}
-
-{/* {formData.croppedImage && (
-          <img
-            className="profile-picture"
-            style={{ borderRadius: "50%", height: "110px", width: "110px" }}
-            src={formData.croppedImage}
-          />
-        )} */}
-   
+     
         <div
             className="img-preview"
             style={{ width: "110px", float: "left", height: "110px", overflow:"hidden", "border-radius":"50%"}}
           />
-{/* {formData.image && <CropperProfile className="img-preview2" style={{ borderRadius: "50%", height: "110px", width: "110px" }} image={formData.image}  />} */}
-{/* {formData.image} */}
+
 
 <div/>
-       {/* <div
-       className="img-preview2"
-       style={{   maxWidth:"110px", maxHeight:"110px", width:"110px", height:"110px", float: "left" }}
->
+     
             
             
-            
-            </div> */}
+           
              
          
 
@@ -231,6 +223,8 @@ export default function Signature2({
               EDIT
             </button>
           )}
+       
+
       </div>
 
     

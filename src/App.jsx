@@ -33,7 +33,7 @@ function App() {
     company_logo2: null,
     meeting_link:"",
     x:"",
-    companyLinkedin:"",
+    company_linkedin:"",
     feedback:"",
     gif:null
   });
