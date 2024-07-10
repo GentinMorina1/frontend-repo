@@ -60,7 +60,7 @@ function App() {
           </Col>
         )}
         <Col className="second-column" md={8}>
-          <button onClick={renderFirstSignature}>First</button>
+          <button className="button-13" onClick={renderFirstSignature}>First</button>
           <div
             style={
               activeComponent === "A"
@@ -77,7 +77,7 @@ function App() {
               cropperRef={cropperRef}
             />
           </div>
-          <button onClick={renderSecondSignature}>second</button>
+          <button className="button-13" onClick={renderSecondSignature}>second</button>
           <div
             style={
               activeComponent === "B"

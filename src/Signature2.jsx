@@ -22,22 +22,29 @@ export default function Signature2({
   handleCrop,
   cropperRef,
 }) {
-
+  const renderImagePreview = (imageSrc) => {
+    return <img className="img-preview" style={{ width: "110px",
+      float: "left",
+    height: "110px",
+      overflow: "hidden",
+      "border-radius": "50%"}} src={imageSrc} alt="Preview" />;
+  };
 
   console.log({ cropperRef });
   return (
     <>
       <div className="content2">
         <div className="signature-content2">
+        {formData.image && renderImagePreview(URL.createObjectURL(formData.image))}
           <div
-            className="img-preview"
-            style={{
-              width: "110px",
-              float: "left",
-              height: "110px",
-              overflow: "hidden",
-              "border-radius": "50%",
-            }}
+            // className="img-preview"
+            // style={{
+            //   width: "110px",
+            //   float: "left",
+            //   height: "110px",
+            //   overflow: "hidden",
+            //   "border-radius": "50%",
+            // }}
           />
 
           <div />
@@ -99,7 +106,7 @@ export default function Signature2({
                   target="_blank"
                   data-saferedirecturl
                 >
-                  <img className="logos2" src={web} /> Website Link
+                  <img className="logos2" src={web} /> Website link
                 </a>
               )}
               {formData.phone && (
