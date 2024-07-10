@@ -22,22 +22,8 @@ export default function Signature2({
   handleCrop,
   cropperRef,
 }) {
-  // const handleEditClick = async () => {
-  //   const fd = new FormData();
-  //   for (var key in formData) {
-  //     fd.append(key, formData[key]);
-  //   }
 
-  //   try {
-  //     const response = await axios.put(`http://backend.test/api/users/${formData.id}`, fd);
-  //     console.log(response.data);
-  //     alert('User updated successfully!');
-  //   } catch (error) {
-  //     console.error('There was an error updating the user!', error);
-  //   }
 
-  //   setShowEdit(false);
-  // };
   console.log({ cropperRef });
   return (
     <>

@@ -92,7 +92,7 @@ export default function UserForm({ setShowEdit, formData, setFormData }) {
     console.log(formData);
     const fd = new FormData();
     for (var key in formData) {
-      fd.append(key, formData[key]);
+       fd.append(key, formData[key]);
     }
 
     console.log("Form Data:", formData);
@@ -105,29 +105,29 @@ export default function UserForm({ setShowEdit, formData, setFormData }) {
       });
       console.log(response.data);
       alert("Form submitted successfully!");
-      setFormData({
-        name: "",
-        last_name: "",
-        title: "",
-        company: "",
-        meeting_link: "",
-        address: "",
-        website: "",
-        twitter: "",
-        company_linkedin: "",
-        linkedin_profile: "",
-        facebook: "",
-        instagram: "",
-        feedback: "",
-        phone: "",
-        email: "",
-        image: null,
-        company_logo: null,
-        company_logo1: null,
-        company_logo2: null,
-        gif: null,
-        description: "",
-      });
+      // setFormData({
+      //   name: "",
+      //   last_name: "",
+      //   title: "",
+      //   company: "",
+      //   meeting_link: "",
+      //   address: "",
+      //   website: "",
+      //   twitter: "",
+      //   company_linkedin: "",
+      //   linkedin_profile: "",
+      //   facebook: "",
+      //   instagram: "",
+      //   feedback: "",
+      //   phone: "",
+      //   email: "",
+      //   image: null,
+      //   company_logo: null,
+      //   company_logo1: null,
+      //   company_logo2: null,
+      //   gif: null,
+      //   description: "",
+      // });
     } catch (error) {
       console.error("Axios Error:", error);
 
@@ -238,10 +238,10 @@ export default function UserForm({ setShowEdit, formData, setFormData }) {
             className="input-form"
             type="url"
             placeholder="X"
-            name="x"
+            name="twitter"
             value={formData.x}
             onChange={(e) => {
-              setFormData({ ...formData, x: e.target.value });
+              setFormData({ ...formData, twitter: e.target.value });
             }}
           />
           <Form.Control
