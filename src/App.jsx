@@ -7,7 +7,6 @@ import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import "./index.css";
-// import Signature from "./Signature";
 import UserForm from "./UserForm";
 import Signature2 from "./Signature2";
 import Signature from "./Signature";
@@ -31,21 +30,21 @@ function App() {
     company_logo: null,
     company_logo1: null,
     company_logo2: null,
-    meeting_link:"",
-    x:"",
-    company_linkedin:"",
-    feedback:"",
-    gif:null
+    meeting_link: "",
+    twitter: "",
+    company_linkedin: "",
+    feedback: "",
+    gif: null,
   });
   const [showEdit, setShowEdit] = useState(true);
   const [activeComponent, setActiveComponent] = useState(null);
- const renderFirstSignature= () => {
-  setActiveComponent('A');
- }
- const renderSecondSignature= () => {
-  setActiveComponent('B');
- }
- const cropperRef = useRef(null);
+  const renderFirstSignature = () => {
+    setActiveComponent("A");
+  };
+  const renderSecondSignature = () => {
+    setActiveComponent("B");
+  };
+  const cropperRef = useRef(null);
 
   return (
     <>
@@ -61,21 +60,37 @@ function App() {
           </Col>
         )}
         <Col className="second-column" md={8}>
-     <button onClick={renderFirstSignature}>First</button>
-<div style={(activeComponent === 'A')? {display:"block"}: {display:"none"}}> <Signature2 formData={formData}
-            setFormData={setFormData} showEdit={showEdit}
-            setShowEdit={setShowEdit} cropperRef={cropperRef}/></div>
-            <button onClick={renderSecondSignature}>second</button>
-<div style={(activeComponent === 'B')? {display:"block"}: {display:"none"}} ><Signature formData={formData} showEdit={showEdit}
-            setShowEdit={setShowEdit} /></div>
-          {/* <Signature
-            showEdit={showEdit}
-            setShowEdit={setShowEdit}
-            formData={formData}
-            setFormData={setFormData}
-          /> */}
-          {/* <Signature2   formData={formData}
-            setFormData={setFormData}/> */}
+          <button onClick={renderFirstSignature}>First</button>
+          <div
+            style={
+              activeComponent === "A"
+                ? { display: "block" }
+                : { display: "none" }
+            }
+          >
+            {" "}
+            <Signature2
+              formData={formData}
+              setFormData={setFormData}
+              showEdit={showEdit}
+              setShowEdit={setShowEdit}
+              cropperRef={cropperRef}
+            />
+          </div>
+          <button onClick={renderSecondSignature}>second</button>
+          <div
+            style={
+              activeComponent === "B"
+                ? { display: "block" }
+                : { display: "none" }
+            }
+          >
+            <Signature
+              formData={formData}
+              showEdit={showEdit}
+              setShowEdit={setShowEdit}
+            />
+          </div>
         </Col>
       </Row>
     </>

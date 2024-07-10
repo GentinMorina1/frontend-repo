@@ -14,19 +14,14 @@ import { CropperProfile } from "./UserForm";
 import "react-quill/dist/quill.snow.css";
 import ReactQuill from "react-quill";
 
-
-
-
-
 export default function Signature2({
   showEdit,
   setShowEdit,
   formData,
   setFormData,
   handleCrop,
-  cropperRef
+  cropperRef,
 }) {
-
   // const handleEditClick = async () => {
   //   const fd = new FormData();
   //   for (var key in formData) {
@@ -43,35 +38,32 @@ export default function Signature2({
 
   //   setShowEdit(false);
   // };
-  console.log({cropperRef})
+  console.log({ cropperRef });
   return (
     <>
-  
       <div className="content2">
         <div className="signature-content2">
-     
-        <div
+          <div
             className="img-preview"
-            style={{ width: "110px", float: "left", height: "110px", overflow:"hidden", "border-radius":"50%"}}
+            style={{
+              width: "110px",
+              float: "left",
+              height: "110px",
+              overflow: "hidden",
+              "border-radius": "50%",
+            }}
           />
 
+          <div />
 
-<div/>
-     
-            
-            
-           
-             
-         
-
-      
           <div className="signature-details2">
             <div>
-           
-                <span className="username2" style={{ "font-size": "15px", "font-weight": "bold" }}>
-                  {formData.name} {formData.last_name}
-                </span>{" "}
-          
+              <span
+                className="username2"
+                style={{ "font-size": "15px", "font-weight": "bold" }}
+              >
+                {formData.name} {formData.last_name}
+              </span>{" "}
               <p className="title-company2">
                 {formData.title}
                 {formData.company && <span>,</span>} {formData.company}
@@ -147,8 +139,8 @@ export default function Signature2({
               </span>
             </div>
             <div className="socialmedia-links2">
-              {formData.companyLinkedin && (
-                <a className="anchor-link2" href={formData.companyLinkedin}>
+              {formData.company_linkedin && (
+                <a className="anchor-link2" href={formData.company_linkedin}>
                   <img
                     className="social-media-logo2"
                     src={linkedin}
@@ -156,8 +148,8 @@ export default function Signature2({
                   />
                 </a>
               )}
-              {formData.x && (
-                <a className="anchor-link2" href={formData.x}>
+              {formData.twitter && (
+                <a className="anchor-link2" href={formData.twitter}>
                   <img className="social-media-logo2" src={x} alt="x" />
                 </a>
               )}
@@ -182,7 +174,7 @@ export default function Signature2({
               <span className="feedback-content2"> {formData.feedback}</span>
               {formData.gif && (
                 <img
-                  style={{ width: "82px", height:"42px" }}
+                  style={{ width: "82px", height: "42px" }}
                   src={URL.createObjectURL(formData.gif)}
                 />
               )}
@@ -190,45 +182,42 @@ export default function Signature2({
           </div>
         </div>
         <div className="companies2">
-        {formData.company_logo && (
+          {formData.company_logo && (
             <img
-            className="company-logo2"
-             style={{width:"100px"}}
-             src={URL.createObjectURL(formData.company_logo)}
-             />
-           )}
-           {formData.company_logo1 && (
+              className="company-logo2"
+              style={{ width: "100px" }}
+              src={URL.createObjectURL(formData.company_logo)}
+            />
+          )}
+          {formData.company_logo1 && (
             <img
-               className=""
-               style={{width:"200px"}}
-               src={URL.createObjectURL(formData.company_logo1)}
-             />
-           )}
-           {formData.company_logo2 && (
+              className=""
+              style={{ width: "200px" }}
+              src={URL.createObjectURL(formData.company_logo1)}
+            />
+          )}
+          {formData.company_logo2 && (
             <img
-               className=""
-               style={{width:"150px"}}
-
-               src={URL.createObjectURL(formData.company_logo2)}
-             />
-           )}
+              className=""
+              style={{ width: "150px" }}
+              src={URL.createObjectURL(formData.company_logo2)}
+            />
+          )}
         </div>
         <div className="descripton2">
-        <span className="description-area2">
-            <p className="desc-test2"> <div dangerouslySetInnerHTML={{ __html: formData.description }} /></p> 
-           </span>
+          <span className="description-area2">
+            <p className="desc-test2">
+              {" "}
+              <div dangerouslySetInnerHTML={{ __html: formData.description }} />
+            </p>
+          </span>
         </div>
         {!showEdit && (
-            <button className="edit-button" onClick={() => setShowEdit(true)}>
-              EDIT
-            </button>
-          )}
-       
-
+          <button className="edit-button" onClick={() => setShowEdit(true)}>
+            EDIT
+          </button>
+        )}
       </div>
-
-    
-
     </>
   );
 }

@@ -163,13 +163,7 @@ export default function Signature({
               src={URL.createObjectURL(formData.company_logo2)}
             />
           )}
-          {/* {formData.companyLogo3 && (
-            <img
-              className=""
-              style={{ width: "100px", "margin-left": "10px" }}
-              src={URL.createObjectURL(formData.companyLogo3)}
-            />
-          )} */}
+        
         </div>
         <div>
           <hr />

@@ -13,39 +13,43 @@ import React, { useState, useRef, memo } from "react";
 import Cropper from "react-cropper";
 import axios from "axios";
 
+axios.defaults.baseURL = "http://localhost:8000";
+axios.defaults.headers.post["Content-Type"] = "multipart/form-data";
 
-axios.defaults.baseURL = 'http://localhost:8000';
-axios.defaults.headers.post['Content-Type'] = 'multipart/form-data';
-
-export function CropperProfile({image="https://raw.githubusercontent.com/roadmanfong/react-cropper/master/example/img/child.jpg", cropperRef}){
-
-
-
-
+export function CropperProfile({
+  image = "https://raw.githubusercontent.com/roadmanfong/react-cropper/master/example/img/child.jpg",
+  cropperRef,
+}) {
   const handleCrop = () => {
     const cropper = cropperRef.current.cropper;
     onCrop(cropper.getCroppedCanvas().toDataURL());
   };
 
-  return (<div>  {image &&  <Cropper
-    style={{ height: 400, width: "400px" }}
-    initialAspectRatio={1}
-    preview=".img-preview"
-    src={URL.createObjectURL(image)}
-    ref={cropperRef}
-    viewMode={1}
-    guides={true}
-    minCropBoxHeight={110}
-    minCropBoxWidth={110}
-    background={false}
-    responsive={true}
-    aspectRatio={1}
-    checkOrientation={false} // https://github.com/fengyuanchen/cropperjs/issues/671
-  />}
- </div>)
+  return (
+    <div>
+      {" "}
+      {image && (
+        <Cropper
+          style={{ height: 400, width: "400px" }}
+          initialAspectRatio={1}
+          preview=".img-preview"
+          src={URL.createObjectURL(image)}
+          ref={cropperRef}
+          viewMode={1}
+          guides={true}
+          minCropBoxHeight={110}
+          minCropBoxWidth={110}
+          background={false}
+          responsive={true}
+          aspectRatio={1}
+          checkOrientation={false} // https://github.com/fengyuanchen/cropperjs/issues/671
+        />
+      )}
+    </div>
+  );
 }
 
-const MemoCropperProfile = memo(CropperProfile)
+const MemoCropperProfile = memo(CropperProfile);
 
 const defaultSrc =
   "https://raw.githubusercontent.com/roadmanfong/react-cropper/master/example/img/child.jpg";
@@ -80,113 +84,80 @@ export default function UserForm({ setShowEdit, formData, setFormData }) {
       [nameInput]: "",
     });
   }
-  function handleDeleteClick(){
-    setFormData('');
+  function handleDeleteClick() {
+    setFormData("");
   }
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log(formData)
+    console.log(formData);
     const fd = new FormData();
-    for ( var key in formData ) {
+    for (var key in formData) {
       fd.append(key, formData[key]);
-   
+    }
 
-  }
-    // const response = await axios.post('http://localhost:8000/api/users', fd);
-    
-    // const data = new FormData();
-    // for (const key in formData) {
-    //   data.append(key, formData[key]);
-    // }
+    console.log("Form Data:", formData);
 
-    // try {
-    //   if (isEdit) {
-    //     const response = await axios.put(`https://your-backend-endpoint.com/api/form/${formData.id}`, formData);
-    //     console.log(response.data);
-    //     alert('Form updated successfully!');
-    //   } else {
-    //     
-    //     console.log(response.data);
-    //     alert('Form submitted successfully!');
-    //   }
-
-    //   setFormData({
-    //     name: '', email: '', message: '', lastName: '', title: '', company: '', profile: '', meetingLink: '', address: '', website: '', x: '', companyLinkedin: '', facebook: '', instagram: '', feedback: '', phone: '', image: null, companyLogo: null, companyLogo1: null, companyLogo2: null, companyLogo3: null, gif: null, description: ''
-    //   });
-    // } catch (error) {
-    //   console.error('There was an error submitting the form!', error);
-    //   alert('There was an error submitting the form.');
-    // }
-  //   setShowEdit(false);
-  // };
-  console.log('Form Data:', formData);
-
-  try {
-    const response = await axios.post('http://backend.test/api/users', fd, {
+    try {
+      const response = await axios.post("http://backend.test/api/users", fd, {
         headers: {
-            'Content-Type': 'multipart/form-data',
+          "Content-Type": "multipart/form-data",
         },
-    });
-    console.log(response.data);
-    alert('Form submitted successfully!');
-    setFormData({
-      name: "",
-      last_name: "",
-      title: "",
-      company: "",
-      meeting_link: "",
-      address: "",
-      website: "",
-      x: "",
-      company_linkedin: "",
-      linkedin_profile:"",
-      facebook: "",
-      instagram: "",
-      feedback: "",
-      phone: "",
-      email: "",   
-      image:null,
-      company_logo: null,
-      company_logo1: null,
-      company_logo2: null,
-      gif: null,
-      description: "",
-    });
-} catch (error) {
-  console.error('Axios Error:', error);
+      });
+      console.log(response.data);
+      alert("Form submitted successfully!");
+      setFormData({
+        name: "",
+        last_name: "",
+        title: "",
+        company: "",
+        meeting_link: "",
+        address: "",
+        website: "",
+        twitter: "",
+        company_linkedin: "",
+        linkedin_profile: "",
+        facebook: "",
+        instagram: "",
+        feedback: "",
+        phone: "",
+        email: "",
+        image: null,
+        company_logo: null,
+        company_logo1: null,
+        company_logo2: null,
+        gif: null,
+        description: "",
+      });
+    } catch (error) {
+      console.error("Axios Error:", error);
 
-  if (error.response) {
-    // The request was made and the server responded with a status code
-    console.error('Server Error:', error.response.data);
-  } else if (error.request) {
-    // The request was made but no response was received
-    console.error('No response from server:', error.request);
-  } else {
-    // Something happened in setting up the request that triggered an error
-    console.error('Request error:', error.message);
-  }
-  // Handle error
-}
+      if (error.response) {
+        // The request was made and the server responded with a status code
+        console.error("Server Error:", error.response.data);
+      } else if (error.request) {
+        // The request was made but no response was received
+        console.error("No response from server:", error.request);
+      } else {
+        // Something happened in setting up the request that triggered an error
+        console.error("Request error:", error.message);
+      }
+      // Handle error
+    }
 
-setShowEdit(false);
-};
-
+    setShowEdit(false);
+  };
 
   // const emailIsInvalid= formData.email !== '' && !formData.email.includes('@');
   const openLinkedInProfile = () => {
     window.open("https://www.linkedin.com/", "_blank");
-  };  
-  
+  };
+
   return (
     <>
       <div className="form-content">
         <h2>Signature details</h2>
-       
 
-
-<div
-            
-          />
+        <div />
         <form action="">
           <Form.Control
             className="input-form"
@@ -232,16 +203,16 @@ setShowEdit(false);
               setFormData({ ...formData, company: e.target.value });
             }}
           />
-           <Form.Control
-              className="input-form"
-              name="meeting_link"
-              type="url"
-              placeholder="Meeting link"
-              value={formData.meetingLink}
-              onChange={(e) => {
-                setFormData({ ...formData, meeting_link: e.target.value });
-              }}
-            />
+          <Form.Control
+            className="input-form"
+            name="meeting_link"
+            type="url"
+            placeholder="Meeting link"
+            value={formData.meetingLink}
+            onChange={(e) => {
+              setFormData({ ...formData, meeting_link: e.target.value });
+            }}
+          />
           <Form.Control
             className="input-form"
             required
@@ -316,7 +287,7 @@ setShowEdit(false);
                 setFormData({ ...formData, instagram: e.target.value });
               }}
             />
-             <Form.Control
+            <Form.Control
               className="input-form"
               required
               name="feedback"
@@ -332,7 +303,8 @@ setShowEdit(false);
             className="input-form"
             name="phone"
             required
-            type = "text" inputmode = "numeric"
+            type="text"
+            inputmode="numeric"
             placeholder="Phone"
             value={formData.phone}
             onChange={(e) => {
@@ -366,7 +338,7 @@ setShowEdit(false);
               setFormData({ ...formData, image: e.target.files[0] });
             }}
           />
-          <MemoCropperProfile image={formData.image}/>
+          <MemoCropperProfile image={formData.image} />
           <label htmlFor="company_logo">Company Logo:</label>
           <Form.Control
             className="input-form"
@@ -382,7 +354,6 @@ setShowEdit(false);
             className="input-form"
             type="file"
             name="company-logo1"
-
             placeholder="Company Logo"
             onChange={(e) => {
               setFormData({ ...formData, company_logo1: e.target.files[0] });
@@ -393,24 +364,13 @@ setShowEdit(false);
             className="input-form"
             type="file"
             name="company_logo2"
-
             placeholder="Company Logo"
             onChange={(e) => {
               setFormData({ ...formData, company_logo2: e.target.files[0] });
             }}
           />
-          {/* <label htmlFor="Company-logo">Company Logo:</label>
-          <Form.Control
-            className="input-form"
-            type="file"
-            name="company-logo4"
 
-            placeholder="Company Logo"
-            onChange={(e) => {
-              setFormData({ ...formData, companyLogo3: e.target.files[0] });
-            }}
-          /> */}
-           <label htmlFor="gif">Gif </label>
+          <label htmlFor="gif">Gif </label>
           <Form.Control
             className="input-form"
             type="file"
@@ -428,12 +388,13 @@ setShowEdit(false);
               setFormData({ ...formData, description: e });
             }}
           />
-          <button className="button" type="button "onClick={handleDeleteClick}>Clear</button>
+          <button className="button" type="button " onClick={handleDeleteClick}>
+            Clear
+          </button>
           <button className="button" type="submit" onClick={handleSubmit}>
             Submit
           </button>
         </form>
-        
       </div>
     </>
   );
