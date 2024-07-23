@@ -1,30 +1,34 @@
 import { Form } from "react-bootstrap";
-import { Button } from "react-bootstrap";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faLinkedin } from "@fortawesome/free-brands-svg-icons";
-import "./index.css";
-import App from "./App";
-// import Signature from "./Signature";
+import "../styles/index.css";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
-import Signature2 from "./Signature2";
 import "cropperjs/dist/cropper.css";
-import React, { useState, useRef, memo } from "react";
+import React, { useState, useRef, memo, useEffect } from "react";
 import Cropper from "react-cropper";
 import axios from "axios";
 
-axios.defaults.baseURL = "http://localhost:8000";
+axios.defaults.baseURL = "http://backend.test/api/users";
 axios.defaults.headers.post["Content-Type"] = "multipart/form-data";
 
 export function CropperProfile({
   image = "https://raw.githubusercontent.com/roadmanfong/react-cropper/master/example/img/child.jpg",
-  cropperRef,
+  setFormData,
 }) {
+  const cropperRef = useRef(null);
   const handleCrop = () => {
     const cropper = cropperRef.current.cropper;
-    onCrop(cropper.getCroppedCanvas().toDataURL());
+    console.log(
+      "cropped end",
+      cropper.getCroppedCanvas().toBlob(function (blob) {
+        console.log("blob", blob);
+        setFormData((p) => {
+          return { ...p, croppedImage: blob };
+        });
+      })
+    );
+    // onCrop(cropper.getCroppedCanvas().toDataURL());
   };
-
+  console.log(image);
   return (
     <div>
       {" "}
@@ -33,16 +37,29 @@ export function CropperProfile({
           style={{ height: 400, width: "400px" }}
           initialAspectRatio={1}
           preview=".img-preview"
-          src={URL.createObjectURL(image)}
+          src={
+            typeof image === "string" && image.includes("http")
+              ? image
+              : URL.createObjectURL(image)
+          }
           ref={cropperRef}
           viewMode={1}
+          crossOrigin="anonymous"
+          cropend={handleCrop}
           guides={true}
           minCropBoxHeight={110}
           minCropBoxWidth={110}
           background={false}
           responsive={true}
           aspectRatio={1}
-          checkOrientation={false} // https://github.com/fengyuanchen/cropperjs/issues/671
+          center={false}
+          dragMode="move"
+          cropBoxMovable={false}
+          toggleDragModeOnDblclick={false}
+          cropBoxResizable={false}
+          rotatable={true}
+          checkCrossOrigin={false}
+          checkOrientation={false}
         />
       )}
     </div>
@@ -60,10 +77,86 @@ const handleInputChange = (e) => {
   setFormData(e.target.value);
 };
 
-export default function UserForm({ setShowEdit, formData, setFormData }) {
+export default function UserForm({
+  setShowEdit,
+  formData,
+  setFormData,
+  signatures,
+  setSignatures,
+  handleEditClick,
+}) {
+  const formDataImageRef = useRef();
+  const formDataCompanyLogoRef= useRef();
+  const formDataCompanyLogoRef1= useRef();
+   const formDataCompanyLogoRef2= useRef();
+   const formDataGifRef = useRef(null);
+
+
+
+
   const [statusForm, setStatusForm] = useState({
     email: "",
+    name: "",
   });
+  const [userId, setUserId] = useState(null);
+
+
+  useEffect(()=>{
+    if(formData?.image){
+
+      let listTransfer = new DataTransfer();
+      // x.files.push(formData.image);
+      listTransfer.items.add(formData.image);
+      formDataImageRef.current.files = listTransfer.files;
+    }
+  },[formData?.image]);
+
+  useEffect(()=>{
+    if(formData?.company_logo){
+
+      let listTransfer = new DataTransfer();
+      // x.files.push(formData.image);
+      listTransfer.items.add(formData.company_logo);
+      formDataCompanyLogoRef.current.files = listTransfer.files;
+    }
+
+  },[formData?.company_logo]);
+  useEffect(()=>{
+    if(formData?.company_logo1){
+
+      let listTransfer = new DataTransfer();
+      // x.files.push(formData.image);
+      listTransfer.items.add(formData.company_logo1);
+      formDataCompanyLogoRef1.current.files = listTransfer.files;
+    }
+
+  },[formData?.company_logo1]);
+  useEffect(()=>{
+    if(formData?.company_logo2){
+
+      let listTransfer = new DataTransfer();
+      // x.files.push(formData.image);
+      listTransfer.items.add(formData.company_logo2);
+      formDataCompanyLogoRef2.current.files = listTransfer.files;
+    }
+
+  },[formData?.company_logo2]);
+  useEffect(()=>{
+    if(formData?.gif){
+      let listTransfer = new DataTransfer();
+      listTransfer.items.add(formData.gif);
+      formDataGifRef.current.files = listTransfer.files;
+    }
+  },[formData?.gif]);
+
+  const validateEmail = (email) => {
+    return String(email)
+      .toLowerCase()
+      .match(
+        /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+      );
+  };
+
   const handleCrop = (croppedImage) => {
     setFormData({ ...formData, croppedImage });
   };
@@ -87,47 +180,48 @@ export default function UserForm({ setShowEdit, formData, setFormData }) {
   function handleDeleteClick() {
     setFormData("");
   }
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+
     console.log(formData);
     const fd = new FormData();
-    for (var key in formData) {
-       fd.append(key, formData[key]);
-    }
 
-    console.log("Form Data:", formData);
+    fd.append("image", formData.croppedImage);
+    fd.append("name", formData.name);
+    fd.append("last_name", formData.last_name);
+    fd.append("title", formData.title);
+    fd.append("company", formData.company);
+    fd.append("linkedin_profile", formData.linkedin_profile);
+    fd.append("facebook", formData.facebook);
+    fd.append("instagram", formData.instagram);
+    fd.append("twitter", formData.twitter);
+    fd.append("address", formData.address);
+    fd.append("website", formData.website);
+    fd.append("description", formData.description);
+    fd.append("phone", formData.phone);
+    fd.append("email", formData.email);
+    fd.append("company_linkedin", formData.company_linkedin);
+    fd.append("feedback", formData.feedback);
+    fd.append("meeting_link", formData.meeting_link);
+    fd.append("gif", formData.gif);
+    fd.append("company_logo", formData.company_logo);
+    fd.append("company_logo1", formData.company_logo1);
+    fd.append("company_logo2", formData.company_logo2);
+    fd.append("id", formData.id);
 
     try {
-      const response = await axios.post("http://backend.test/api/users", fd, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      });
+      const response = await axios.post(
+        `http://backend.test/api/save-user`,
+        fd,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
       console.log(response.data);
       alert("Form submitted successfully!");
-      // setFormData({
-      //   name: "",
-      //   last_name: "",
-      //   title: "",
-      //   company: "",
-      //   meeting_link: "",
-      //   address: "",
-      //   website: "",
-      //   twitter: "",
-      //   company_linkedin: "",
-      //   linkedin_profile: "",
-      //   facebook: "",
-      //   instagram: "",
-      //   feedback: "",
-      //   phone: "",
-      //   email: "",
-      //   image: null,
-      //   company_logo: null,
-      //   company_logo1: null,
-      //   company_logo2: null,
-      //   gif: null,
-      //   description: "",
-      // });
     } catch (error) {
       console.error("Axios Error:", error);
 
@@ -147,7 +241,6 @@ export default function UserForm({ setShowEdit, formData, setFormData }) {
     setShowEdit(false);
   };
 
-  // const emailIsInvalid= formData.email !== '' && !formData.email.includes('@');
   const openLinkedInProfile = () => {
     window.open("https://www.linkedin.com/", "_blank");
   };
@@ -159,6 +252,7 @@ export default function UserForm({ setShowEdit, formData, setFormData }) {
 
         <div />
         <form action="">
+     
           <Form.Control
             className="input-form"
             required
@@ -334,17 +428,22 @@ export default function UserForm({ setShowEdit, formData, setFormData }) {
             type="file"
             placeholder="Image"
             name="image"
+            ref={formDataImageRef}
             onChange={(e) => {
               setFormData({ ...formData, image: e.target.files[0] });
             }}
           />
-          <MemoCropperProfile image={formData.image} />
+          <MemoCropperProfile
+            setFormData={setFormData}
+            image={formData.image}
+          />
           <label htmlFor="company_logo">Company Logo:</label>
           <Form.Control
             className="input-form"
             type="file"
-            name="company_logo"
+            name="company_logo"         
             placeholder="Company Logo"
+            ref={formDataCompanyLogoRef}
             onChange={(e) => {
               setFormData({ ...formData, company_logo: e.target.files[0] });
             }}
@@ -353,8 +452,10 @@ export default function UserForm({ setShowEdit, formData, setFormData }) {
           <Form.Control
             className="input-form"
             type="file"
-            name="company-logo1"
+            name="company_logo1"
             placeholder="Company Logo"
+           ref={formDataCompanyLogoRef1}
+
             onChange={(e) => {
               setFormData({ ...formData, company_logo1: e.target.files[0] });
             }}
@@ -365,6 +466,8 @@ export default function UserForm({ setShowEdit, formData, setFormData }) {
             type="file"
             name="company_logo2"
             placeholder="Company Logo"
+            ref={formDataCompanyLogoRef2}
+
             onChange={(e) => {
               setFormData({ ...formData, company_logo2: e.target.files[0] });
             }}
@@ -376,6 +479,7 @@ export default function UserForm({ setShowEdit, formData, setFormData }) {
             type="file"
             name="gif"
             placeholder="Gif"
+            ref={formDataGifRef}
             onChange={(e) => {
               setFormData({ ...formData, gif: e.target.files[0] });
             }}
@@ -388,6 +492,9 @@ export default function UserForm({ setShowEdit, formData, setFormData }) {
               setFormData({ ...formData, description: e });
             }}
           />
+          {/* <Button type="submit" className="btn-primary">
+          {formData.id ? "Update Signature" : "Add Signature"}
+        </Button> */}
           <button className="button" type="button " onClick={handleDeleteClick}>
             Clear
           </button>
@@ -399,10 +506,3 @@ export default function UserForm({ setShowEdit, formData, setFormData }) {
     </>
   );
 }
-const validateEmail = (email) => {
-  return String(email)
-    .toLowerCase()
-    .match(
-      /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
-    );
-};

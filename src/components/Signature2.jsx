@@ -3,7 +3,7 @@ import emailL from "/assets/images/email.png";
 import phoneE from "/assets/images/phone.png";
 import web from "/assets/images/web.png";
 import meetingLogo from "/assets/images/MeetingLink.png";
-import "./secondSignature.css";
+import "../styles/secondSignature.css";
 import linkedinLogo from "/assets/images/LinkedinProfile.png";
 import linkedin from "/assets/images/linkedin.png";
 import x from "/assets/images/twitter.png";
@@ -13,6 +13,11 @@ import Cropper from "react-cropper";
 import { CropperProfile } from "./UserForm";
 import "react-quill/dist/quill.snow.css";
 import ReactQuill from "react-quill";
+import axios from "axios";
+import Edit from "../pages/Edit";
+import { useEffect } from "react";
+
+
 
 export default function Signature2({
   showEdit,
@@ -21,33 +26,58 @@ export default function Signature2({
   setFormData,
   handleCrop,
   cropperRef,
-}) {
+  handleUpdate
+  
+
+})  {
+
   const renderImagePreview = (imageSrc) => {
     return <img className="img-preview" style={{ width: "110px",
       float: "left",
     height: "110px",
       overflow: "hidden",
-      "border-radius": "50%"}} src={imageSrc} alt="Preview" />;
+      bordeRadius: "50%"}} src={imageSrc} alt="Preview" />;
   };
+  const getImageSrc = (image) => {
+    if (!image) return null;
+  
+    if (typeof image === "string" && (image.startsWith("data:image") || image.startsWith("http"))) {
+      return image;
+    }
+  
+    // Check for specific image properties for company logos
+    if (image.company_logo && typeof image.company_logo === "string" && (image.company_logo.startsWith("data:image") || image.company_logo.startsWith("http"))) {
+      return image.company_logo;
+    }
+  
+    if (image.company_logo1 && typeof image.company_logo1 === "string" && (image.company_logo1.startsWith("data:image") || image.company_logo1.startsWith("http"))) {
+      return image.company_logo1;
+    }
+  
+    if (image.company_logo2 && typeof image.company_logo2 === "string" && (image.company_logo2.startsWith("data:image") || image.company_logo2.startsWith("http"))) {
+      return image.company_logo2;
+    }
+  
+    // Fallback to creating object URL for other cases
+    return URL.createObjectURL(image);
+  };
+  
 
+
+  console.log('formdAta',formData);
   console.log({ cropperRef });
+  useEffect(() => {
+    console.log("Rendering Signature2 with formData:", formData);
+  }, [formData]);
+
+
   return (
     <>
       <div className="content2">
         <div className="signature-content2">
-        {formData.image && renderImagePreview(URL.createObjectURL(formData.image))}
-          <div
-            // className="img-preview"
-            // style={{
-            //   width: "110px",
-            //   float: "left",
-            //   height: "110px",
-            //   overflow: "hidden",
-            //   "border-radius": "50%",
-            // }}
-          />
-
-          <div />
+        {formData.croppedImage && renderImagePreview((typeof formData.croppedImage === 'string'  && formData.croppedImage.includes('http')) ? formData.croppedImage : URL.createObjectURL(formData.croppedImage)
+) }
+     
 
           <div className="signature-details2">
             <div>
@@ -205,12 +235,20 @@ export default function Signature2({
             </p>
           </span>
         </div>
+        
         {!showEdit && (
           <button className="edit-button" onClick={() => setShowEdit(true)}>
             EDIT
           </button>
         )}
+      
+         {/* {showEdit && (
+          <button className="submit-button" onClick={handleUpdate}>
+            Update
+          </button>
+        )} */}
       </div>
+
     </>
   );
 }

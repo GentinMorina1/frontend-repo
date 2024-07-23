@@ -9,7 +9,7 @@ import photo from "/assets/images/address.png";
 import emailL from "/assets/images/email.png";
 import phoneE from "/assets/images/phone.png";
 import web from "/assets/images/web.png";
-import App from "./App";
+import App from "../App";
 import { left } from "@popperjs/core";
 
 

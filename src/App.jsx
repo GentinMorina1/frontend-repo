@@ -1,19 +1,50 @@
-import { useState, useRef } from "react";
-import reactLogo from "/assets/react.svg";
-import viteLogo from "/vite.svg";
-import "./App.css";
+import React, { useState, useRef } from "react";
+import "./styles/App.css";
 import "bootstrap/dist/css/bootstrap.min.css";
-import Container from "react-bootstrap/Container";
-import Row from "react-bootstrap/Row";
-import Col from "react-bootstrap/Col";
-import "./index.css";
-import UserForm from "./UserForm";
-import Signature2 from "./Signature2";
-import Signature from "./Signature";
-import "./secondSignature.css";
+import "./styles/index.css";
+import "./styles/secondSignature.css";
+import {
+  createBrowserRouter,
+  RouterProvider,
+} from "react-router-dom";
+import Edit from "./pages/Edit";
+import Home from "./pages/Home";
+import Login from "./pages/Login";
+import Sidebar from "./components/Sidebar";
+import Dashboard from "./pages/Dashboard";
+import AdminPanel from "./pages/AdminPanel";
+import UserList from "./components/UserList";
+import UserEdit from "./components/UserEdit";
+import UserDashboard from "./pages/UserDashboard";
+import ProfileSettings from "./pages/ProfileSettings";
+import AdminRoute from "./components/AdminRoute"; // Protecting admin routes
+import PrivateRoute from "./components/PrivateRoute"; // Protecting user routes
+import AdminDashboard from "./pages/AdminDashboard";
+import CreateSignature from './components/CreateSignature'; // Adjust the path if necessary
+import Register from "./components/Register";
+
+
+// Define your routes
+const router = createBrowserRouter([
+  { path: "/home", element: <Home /> },
+  { path: "/login", element: <Login /> },
+  { path: "/sidebar", element: <Sidebar /> },
+  { path: "/register", element: <Register /> }, // Add Register route
+
+  { path: "/dashboard", element: <Dashboard /> },
+  { path: "/admin-dashboard", element: <AdminRoute><AdminDashboard /></AdminRoute> },
+  { path: "/edit/:id", element: <AdminRoute><Edit /></AdminRoute> },
+  { path: "/admin-panel", element: <AdminRoute><AdminPanel /></AdminRoute> },
+  { path: "/admin/user-list", element: <AdminRoute><UserList /></AdminRoute> },
+  { path: "/user-dashboard", element: <PrivateRoute><UserDashboard /></PrivateRoute> },
+  { path: "/profile-settings", element: <PrivateRoute><ProfileSettings /></PrivateRoute> },
+  { path: "/edit-signature/:id", element: <PrivateRoute><Edit /></PrivateRoute> },
+  {path: "/create-signature", element: <PrivateRoute><CreateSignature /> </PrivateRoute>}
+]);
 
 function App() {
   const [formData, setFormData] = useState({
+    id: null,
     name: "",
     last_name: "",
     title: "",
@@ -35,65 +66,27 @@ function App() {
     company_linkedin: "",
     feedback: "",
     gif: null,
+    croppedImage: null,
   });
   const [showEdit, setShowEdit] = useState(true);
   const [activeComponent, setActiveComponent] = useState(null);
+  const [signatures, setSignatures] = useState([]);
+  const [users, setUsers] = useState([]);
+  const [allUserIds, setAllUserIds] = useState([]); // Define allUserIds state here
+  const [selectedSignature, setSelectedSignature] = useState(null); // State for selected signature
+
   const renderFirstSignature = () => {
     setActiveComponent("A");
   };
+
   const renderSecondSignature = () => {
     setActiveComponent("B");
   };
+
   const cropperRef = useRef(null);
 
   return (
-    <>
-      <Row>
-        {showEdit && (
-          <Col md={4}>
-            <UserForm
-              setShowEdit={setShowEdit}
-              formData={formData}
-              setFormData={setFormData}
-              cropperRef={cropperRef}
-            />
-          </Col>
-        )}
-        <Col className="second-column" md={8}>
-          <button className="button-13" onClick={renderFirstSignature}>First</button>
-          <div
-            style={
-              activeComponent === "A"
-                ? { display: "block" }
-                : { display: "none" }
-            }
-          >
-            {" "}
-            <Signature2
-              formData={formData}
-              setFormData={setFormData}
-              showEdit={showEdit}
-              setShowEdit={setShowEdit}
-              cropperRef={cropperRef}
-            />
-          </div>
-          <button className="button-13" onClick={renderSecondSignature}>second</button>
-          <div
-            style={
-              activeComponent === "B"
-                ? { display: "block" }
-                : { display: "none" }
-            }
-          >
-            <Signature
-              formData={formData}
-              showEdit={showEdit}
-              setShowEdit={setShowEdit}
-            />
-          </div>
-        </Col>
-      </Row>
-    </>
+    <RouterProvider router={router} />
   );
 }
 
