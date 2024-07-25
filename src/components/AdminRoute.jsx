@@ -1,17 +1,19 @@
-// src/components/AdminRoute.jsx
+// AdminRoute.js
 import React from 'react';
-import { Navigate } from 'react-router-dom';
+import { Route, Navigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 
-const AdminRoute = ({ children }) => {
-  const role = useSelector((state) => state.auth.role);
-
-  if (role !== 'admin') {
-    // Redirect to login page if not admin
-    return <Navigate to="/login" />;
-  }
-
-  return children;
+const AdminRoute = ({ element, ...rest }) => {
+    const auth = useSelector((state) => state.auth);
+    const isAuthenticated = !!auth.token;
+    const isAdmin = auth.role === 'admin';
+    
+    return (
+        <div 
+            {...rest} 
+            element={isAuthenticated && isAdmin ? element : <Navigate to="/login" />}
+        />
+    );
 };
 
 export default AdminRoute;

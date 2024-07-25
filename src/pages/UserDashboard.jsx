@@ -1,53 +1,73 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import UserForm from "../components/UserForm";
 import { useNavigate } from 'react-router-dom';
+import { useSelector } from 'react-redux';
+import '../styles/UserDashboard.css';
 
 export default function UserDashboard() {
-  const [formData, setFormData] = useState({});
   const [signatures, setSignatures] = useState([]);
-  const [editing, setEditing] = useState(false);
-  const [editId, setEditId] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const navigate = useNavigate();
-
+  const auth = useSelector((state) => state.auth);
+  const userToken = auth.token;
+  const id = window.localStorage['user-id'];
+  
   useEffect(() => {
-    // Fetch all signatures when the component mounts
     const fetchSignatures = async () => {
       try {
-        const response = await axios.get('http://backend.test/api/users');
+        const response = await axios.get(`http://backend.test/api/users/${id}`, {
+          headers: {
+            'Authorization': `Bearer ${userToken}`
+          }
+        });
         setSignatures(response.data);
+        setLoading(false);
       } catch (error) {
+        setError('Error fetching signatures. Please try again later.');
+        setLoading(false);
         console.error("Error fetching signatures:", error);
       }
     };
 
-    fetchSignatures();
-  }, []);
+    if (userToken) {
+      fetchSignatures();
+    } else {
+      console.error("User token not found.");
+      navigate('/login');
+    }
+  }, [userToken, navigate]);
 
   const handleCreateSignature = () => {
-    setFormData({});
-    setEditing(false);
-    navigate('/create-signature'); // Redirect to create signature page if necessary
+    navigate('/create-signature');
   };
 
   const handleEditClick = (id) => {
-    setEditId(id);
-    setEditing(true);
-    navigate(`/edit-signature/${id}`); // Redirect to edit signature page
+    navigate(`/edit-signature/${id}`);
   };
 
   return (
-    <div>
-      <h1>User Dashboard</h1>
-      <button onClick={handleCreateSignature}>Create New Signature</button>
-      <div>
-        {signatures.map(signature => (
-          <div key={signature.id}>
-            <h2>{signature.name} {signature.last_name}</h2>
-            <button onClick={() => handleEditClick(signature.id)}>Edit</button>
-          </div>
-        ))}
-      </div>
+    <div className="user-dashboard">
+      <header className="dashboard-header">
+        <h1>User Dashboard</h1>
+        <button className="create-button" onClick={handleCreateSignature}>Create New Signature</button>
+      </header>
+      <main className="signature-list">
+        {loading ? (
+          <p>Loading...</p>
+        ) : error ? (
+          <p className="error-message">{error}</p>
+        ) : signatures.length > 0 ? (
+          signatures.map(signature => (
+            <div key={signature.id} className="signature-card">
+              <h2>{signature.name} {signature.last_name}</h2>
+              <button className="edit-button" onClick={() => handleEditClick(signature.id)}>Edit</button>
+            </div>
+          ))
+        ) : (
+          <p className="no-signatures">No signatures found.</p>
+        )}
+      </main>
     </div>
   );
 }

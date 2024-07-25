@@ -21,7 +21,6 @@ const Register = () => {
       setError('Passwords do not match');
       return;
     }
-console.log("sda")
     try {
       // Send registration data to the backend
       const response = await fetch('http://backend.test/api/register', {
@@ -31,9 +30,9 @@ console.log("sda")
           'Accept': 'application/json', // Specify the expected response type
         },
         body: JSON.stringify({
-          name: "gentin",
-          email: "gentin.morina1@gmail.com",
-          password: "12345678",
+          name,
+          email,
+          password
        
         })
       });
@@ -46,7 +45,7 @@ console.log("sda")
       }
       
       // Navigate to login page after successful registration
-      // navigate('/login');
+      navigate('/login');
     } catch (error) {
       // Improved error handling
       console.error('Registration Error:', error.response?.data || error.message);
@@ -94,13 +93,7 @@ console.log("sda")
             required
           />
         </div>
-        <div className="form-group">
-          <label>Role:</label>
-          <select value={role} onChange={(e) => setRole(e.target.value)}>
-            <option value="user">User</option>
-            <option value="admin">Admin</option>
-          </select>
-        </div>
+   
         <button type="submit" className="register-button">Register</button>
         {error && <p style={{ color: 'red' }}>{error}</p>}
       </form>

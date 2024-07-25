@@ -212,7 +212,7 @@ export default function UserForm({
 
     try {
       const response = await axios.post(
-        `http://backend.test/api/save-user`,
+        `http://backend.test/api/users/store`,
         fd,
         {
           headers: {

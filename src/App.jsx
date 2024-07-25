@@ -3,10 +3,7 @@ import "./styles/App.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./styles/index.css";
 import "./styles/secondSignature.css";
-import {
-  createBrowserRouter,
-  RouterProvider,
-} from "react-router-dom";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Edit from "./pages/Edit";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
@@ -22,15 +19,14 @@ import PrivateRoute from "./components/PrivateRoute"; // Protecting user routes
 import AdminDashboard from "./pages/AdminDashboard";
 import CreateSignature from './components/CreateSignature'; // Adjust the path if necessary
 import Register from "./components/Register";
-
+import SignatureList from "./components/SignatureList"; // Import the component for the new route
 
 // Define your routes
 const router = createBrowserRouter([
   { path: "/home", element: <Home /> },
   { path: "/login", element: <Login /> },
   { path: "/sidebar", element: <Sidebar /> },
-  { path: "/register", element: <Register /> }, // Add Register route
-
+  { path: "/register", element: <Register /> },
   { path: "/dashboard", element: <Dashboard /> },
   { path: "/admin-dashboard", element: <AdminRoute><AdminDashboard /></AdminRoute> },
   { path: "/edit/:id", element: <AdminRoute><Edit /></AdminRoute> },
@@ -39,7 +35,8 @@ const router = createBrowserRouter([
   { path: "/user-dashboard", element: <PrivateRoute><UserDashboard /></PrivateRoute> },
   { path: "/profile-settings", element: <PrivateRoute><ProfileSettings /></PrivateRoute> },
   { path: "/edit-signature/:id", element: <PrivateRoute><Edit /></PrivateRoute> },
-  {path: "/create-signature", element: <PrivateRoute><CreateSignature /> </PrivateRoute>}
+  { path: "/create-signature", element: <PrivateRoute><CreateSignature /></PrivateRoute> },
+  { path: "/admin/signature-list", element: <AdminRoute><SignatureList /></AdminRoute> } // Add the new route here
 ]);
 
 function App() {
@@ -72,8 +69,8 @@ function App() {
   const [activeComponent, setActiveComponent] = useState(null);
   const [signatures, setSignatures] = useState([]);
   const [users, setUsers] = useState([]);
-  const [allUserIds, setAllUserIds] = useState([]); // Define allUserIds state here
-  const [selectedSignature, setSelectedSignature] = useState(null); // State for selected signature
+  const [allUserIds, setAllUserIds] = useState([]);
+  const [selectedSignature, setSelectedSignature] = useState(null);
 
   const renderFirstSignature = () => {
     setActiveComponent("A");

@@ -1,43 +1,26 @@
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import axios from 'axios';
-import Login from '../../pages/Login';
-
-
-export const loginUser = createAsyncThunk('auth/loginUser', async (credentials) => {
-  const response = await axios.post('http://backend.test/api/login', credentials);
-  return response.data;
-});
+// authSlice.js
+import { createSlice } from '@reduxjs/toolkit';
 
 const authSlice = createSlice({
-  name: 'auth',
-  initialState: {
-    user: null,
-    role: null,
-    status: 'idle',
-    error: null,
-  },
-  reducers: {
-    logout: (state) => {
-      state.user = null;
-      state.role = null;
+    name: 'auth',
+    initialState: {
+        token: null,
+        user: null,
+        role: null,
     },
-  },
-  extraReducers: (builder) => {
-    builder
-      .addCase(loginUser.pending, (state) => {
-        state.status = 'loading';
-      })
-      .addCase(loginUser.fulfilled, (state, action) => {
-        state.status = 'succeeded';
-        state.user = action.payload.user;
-        state.role = action.payload.role;
-      })
-      .addCase(loginUser.rejected, (state, action) => {
-        state.status = 'failed';
-        state.error = action.error.message;
-      });
-  },
+    reducers: {
+        login: (state, action) => {
+            state.token = action.payload.token;
+            // state.user = action.payload.user;
+            state.role = action.payload.role;
+        },
+        logout: (state) => {
+            state.token = null;
+            state.user = null;
+            state.role = null;
+        },
+    },
 });
 
-export const { logout } = authSlice.actions;
+export const { login, logout } = authSlice.actions;
 export default authSlice.reducer;

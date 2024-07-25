@@ -26,8 +26,8 @@ export default function Signature2({
   setFormData,
   handleCrop,
   cropperRef,
-  handleUpdate
-  
+  handleUpdate,
+  croppedImage
 
 })  {
 
