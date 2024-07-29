@@ -184,7 +184,6 @@ export default function UserForm({
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    console.log(formData);
     const fd = new FormData();
 
     fd.append("image", formData.croppedImage);
@@ -211,36 +210,28 @@ export default function UserForm({
     fd.append("id", formData.id);
 
     try {
-      const response = await axios.post(
-        `http://backend.test/api/users/store`,
-        fd,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        }
-      );
+      const token = localStorage.getItem('token'); // Ensure you have the token stored in localStorage
+      const response = await axios.post('http://backend.test/api/signature/store', fd, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+          'Authorization': `Bearer ${token}`,
+        },
+      });
       console.log(response.data);
       alert("Form submitted successfully!");
     } catch (error) {
       console.error("Axios Error:", error);
-
       if (error.response) {
-        // The request was made and the server responded with a status code
         console.error("Server Error:", error.response.data);
       } else if (error.request) {
-        // The request was made but no response was received
         console.error("No response from server:", error.request);
       } else {
-        // Something happened in setting up the request that triggered an error
         console.error("Request error:", error.message);
       }
-      // Handle error
     }
 
     setShowEdit(false);
   };
-
   const openLinkedInProfile = () => {
     window.open("https://www.linkedin.com/", "_blank");
   };

@@ -11,17 +11,17 @@ export default function UserDashboard() {
   const navigate = useNavigate();
   const auth = useSelector((state) => state.auth);
   const userToken = auth.token;
-  const id = window.localStorage['user-id'];
+  const userId = window.localStorage.getItem('user-id'); // Retrieve user ID from local storage
   
   useEffect(() => {
     const fetchSignatures = async () => {
       try {
-        const response = await axios.get(`http://backend.test/api/users/${id}`, {
+        const response = await axios.get(`http://backend.test/api/users/${userId}`, {
           headers: {
             'Authorization': `Bearer ${userToken}`
           }
         });
-        setSignatures(response.data);
+        setSignatures(response.data); // Ensure response.data is an array of signatures
         setLoading(false);
       } catch (error) {
         setError('Error fetching signatures. Please try again later.');
@@ -36,7 +36,7 @@ export default function UserDashboard() {
       console.error("User token not found.");
       navigate('/login');
     }
-  }, [userToken, navigate]);
+  }, [userToken, navigate, userId]);
 
   const handleCreateSignature = () => {
     navigate('/create-signature');
