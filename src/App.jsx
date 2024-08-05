@@ -20,6 +20,7 @@ import AdminDashboard from "./pages/AdminDashboard";
 import CreateSignature from './components/CreateSignature'; // Adjust the path if necessary
 import Register from "./components/Register";
 import SignatureList from "./components/SignatureList"; // Import the component for the new route
+import EditSignature from "./components/EditSignature";
 
 // Define your routes
 const router = createBrowserRouter([
@@ -34,7 +35,7 @@ const router = createBrowserRouter([
   { path: "/admin/user-list", element: <AdminRoute><UserList /></AdminRoute> },
   { path: "/user-dashboard", element: <PrivateRoute><UserDashboard /></PrivateRoute> },
   { path: "/profile-settings", element: <PrivateRoute><ProfileSettings /></PrivateRoute> },
-  { path: "/edit-signature/:id", element: <PrivateRoute><Edit /></PrivateRoute> },
+  { path: "/edit-signature/:id", element: <PrivateRoute><EditSignature /></PrivateRoute> },
   { path: "/create-signature", element: <PrivateRoute><CreateSignature /></PrivateRoute> },
   { path: "/admin/signature-list", element: <AdminRoute><SignatureList /></AdminRoute> } // Add the new route here
 ]);
@@ -82,6 +83,8 @@ function App() {
 
   const cropperRef = useRef(null);
 
+
+  
   return (
     <RouterProvider router={router} />
   );

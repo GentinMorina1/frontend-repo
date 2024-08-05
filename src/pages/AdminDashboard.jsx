@@ -4,13 +4,15 @@ import { Link } from "react-router-dom";
 import { Line } from "react-chartjs-2";
 import axios from "axios";
 import "chart.js/auto";
-import { Container, Row, Col, Card, Button, ListGroup } from "react-bootstrap";
+import { Container, Row, Col, Card, Button, ListGroup, Alert } from "react-bootstrap";
 import "../styles/AdminDashboard.css"; // Import the CSS file
 
 const AdminDashboard = () => {
   const [users, setUsers] = useState([]);
   const [signatures, setSignatures] = useState([]);
+  const [error, setError] = useState(null);
   const metrics = useSelector((state) => state.admin.metrics);
+  const token = localStorage.getItem("token"); // Retrieve token from local storage
 
   // Example data for chart
   const data = {
@@ -31,61 +33,101 @@ const AdminDashboard = () => {
       try {
         const response = await axios.get("http://backend.test/api/get-users", {
           headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`, // Include token if needed
+            Authorization: `Bearer ${token}`, // Include token if needed
           },
         });
         setUsers(response.data.users || []);
       } catch (error) {
         console.error("Error fetching users:", error);
+        setError("Error fetching users.");
       }
     };
 
     // Fetch signatures
     const fetchSignatures = async () => {
       try {
-        const response = await axios.get("http://backend.test/api/signatures", {
+        const response = await axios.get("http://backend.test/api/get-signatures", {
           headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`, // Include token if needed
+            Authorization: `Bearer ${token}`, // Include token if needed
           },
         });
         setSignatures(response.data.signatures || []);
       } catch (error) {
         console.error("Error fetching signatures:", error);
+        setError("Error fetching signatures.");
       }
     };
 
     fetchUsers();
     fetchSignatures();
-  }, []);
+  }, [token]);
 
-  const handleDeleteSignature = async (signatureId) => {
+  const handleDeleteUser = async (userId) => {
     try {
-      await axios.delete(
-        `http://backend.test/api/delete-signature/${signatureId}`,
-        {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`, // Include token if needed
-          },
-        }
-      );
-      // Remove the deleted signature from the signatures state
-      setSignatures(signatures.filter((sig) => sig.id !== signatureId));
+      const response = await axios.delete(`http://backend.test/api/delete-user/${userId}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      if (response.status === 200 || response.status === 204) {
+        setUsers(users.filter((user) => user.id !== userId));
+        setSignatures(signatures.filter((sig) => sig.user_id !== userId));
+      } else {
+        console.error("Failed to delete user:", response);
+        setError("Failed to delete user.");
+      }
     } catch (error) {
-      console.error("Error deleting signature:", error);
+      console.error("Error deleting user:", error);
+      setError(error.response?.data?.message || "Error deleting user.");
     }
   };
+  
+  const handleDeleteSignature = async (signatureId) => {
+    try {
+      const response = await axios.delete(`http://backend.test/api/signature/${signatureId}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      if (response.status === 200 || response.status === 204) {
+        setSignatures(signatures.filter((sig) => sig.id !== signatureId));
+      } else {
+        console.error("Failed to delete signature:", response);
+        setError("Failed to delete signature.");
+      }
+    } catch (error) {
+      console.error("Error deleting signature:", error);
+      setError(error.response?.data?.message || "Error deleting signature.");
+    }
+  };
+  
 
   // Combine signatures with their users
   const usersWithSignatures = users.map(user => ({
     ...user,
     signatures: signatures.filter(sig => sig.user_id === user.id)
   }));
+  const handleLogout = async () => {
+    try {
+      await axios.post('http://backend.test/api/logout', {}, {
+        headers: {
+          'Authorization': `Bearer ${userToken}`
+        }
+      });
+      dispatch(logout());
+      navigate('/login');
+    } catch (error) {
+      console.error('Logout Error:', error.response?.data || error.message);
+    }
+  };
+
 
   return (
     <Container className="admin-dashboard">
       <Row className="my-4">
         <Col>
           <h2>Admin Dashboard</h2>
+          {error && <Alert variant="danger">{error}</Alert>}
         </Col>
       </Row>
       <Row>
@@ -131,11 +173,11 @@ const AdminDashboard = () => {
                                   className="mr-2"
                                   onClick={() => handleDeleteSignature(signature.id)}
                                 >
-                                  Delete
+                                  Delete Signature
                                 </Button>
                                 <Link to={`/admin/edit-signature/${signature.id}`}>
                                   <Button variant="primary" size="sm">
-                                    Edit
+                                    Edit Signature
                                   </Button>
                                 </Link>
                               </div>
@@ -145,6 +187,14 @@ const AdminDashboard = () => {
                           <ListGroup.Item>No signatures found for this user.</ListGroup.Item>
                         )}
                       </ListGroup>
+                      <div className="mt-2">
+                        <Button
+                          variant="danger"
+                          onClick={() => handleDeleteUser(user.id)}
+                        >
+                          Delete User
+                        </Button>
+                      </div>
                     </Card.Body>
                   </Card>
                 ))

@@ -6,6 +6,7 @@ import "cropperjs/dist/cropper.css";
 import React, { useState, useRef, memo, useEffect } from "react";
 import Cropper from "react-cropper";
 import axios from "axios";
+import { width } from "@fortawesome/free-brands-svg-icons/fa42Group";
 
 axios.defaults.baseURL = "http://backend.test/api/users";
 axios.defaults.headers.post["Content-Type"] = "multipart/form-data";
@@ -424,6 +425,7 @@ export default function UserForm({
               setFormData({ ...formData, image: e.target.files[0] });
             }}
           />
+          {/* <img src={formData.image} style={{ "width": "200px", "height":"200px", "outline": "2px solid red"}} /> */}
           <MemoCropperProfile
             setFormData={setFormData}
             image={formData.image}
