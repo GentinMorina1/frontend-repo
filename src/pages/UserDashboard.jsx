@@ -84,8 +84,10 @@ export default function UserDashboard() {
     <div className="user-dashboard">
       <header className="dashboard-header">
         <h1>User Dashboard</h1>
-        <button className="create-button" onClick={handleCreateSignature}>Create New Signature</button>
-        <button className="logout-button" onClick={handleLogout}>Logout</button>
+        <div>
+          <button className="create-button" onClick={handleCreateSignature}>Create New Signature</button>
+          <button className="logout-button" onClick={handleLogout}>Logout</button>
+        </div>
       </header>
       <main className="signature-list">
         {loading ? (

@@ -7,6 +7,7 @@ import React, { useState, useRef, memo, useEffect } from "react";
 import Cropper from "react-cropper";
 import axios from "axios";
 import { width } from "@fortawesome/free-brands-svg-icons/fa42Group";
+import { useNavigate } from "react-router-dom";
 
 axios.defaults.baseURL = "http://backend.test/api/users";
 axios.defaults.headers.post["Content-Type"] = "multipart/form-data";
@@ -91,6 +92,7 @@ export default function UserForm({
   const formDataCompanyLogoRef1= useRef();
    const formDataCompanyLogoRef2= useRef();
    const formDataGifRef = useRef(null);
+   const navigate = useNavigate();
 
 
 
@@ -220,6 +222,8 @@ export default function UserForm({
       });
       console.log(response.data);
       alert("Form submitted successfully!");
+      navigate('/user-dashboard'); // Navigate to the user dashboard
+
     } catch (error) {
       console.error("Axios Error:", error);
       if (error.response) {
@@ -230,7 +234,7 @@ export default function UserForm({
         console.error("Request error:", error.message);
       }
     }
-
+  
     setShowEdit(false);
   };
   const openLinkedInProfile = () => {

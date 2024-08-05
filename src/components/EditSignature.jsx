@@ -25,7 +25,17 @@ const EditSignature = () => {
       });
     }
   };
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setImageFile(file); // Store the file to be cropped
+    }
+  };
 
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
+  };
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -35,83 +45,84 @@ const EditSignature = () => {
           navigate('/login');
           return;
         }
-
+  
         const signatureResponse = await axios.get(`http://backend.test/api/signatures/${userId}`, {
           headers: {
             'Authorization': `Bearer ${token}`
           }
         });
-
+        console.log('requrest!!!');
+  
         const { signature } = signatureResponse.data;
         setFormData(signature);
-
+  
         const userResponse = await axios.get(`http://backend.test/api/users/${userId}`, {
           headers: {
             'Authorization': `Bearer ${token}`
           }
         });
-
+  
         console.log('Full API Response:', userResponse.data);
-
-        const userData = userResponse.data.user;
+  
+        const userData = userResponse.data.user || {};
         const imageData = userResponse.data.image && userResponse.data.image[0] ? userResponse.data.image[0] : null;
-
+  
         const imageCompanyLogo = imageData ? imageData.company_logo : null;
         const imageCompanyLogo1 = imageData ? imageData.company_logo1 : null;
         const imageCompanyLogo2 = imageData ? imageData.company_logo2 : null;
         const imageGif = imageData ? imageData.gif : null;
-
+  
         console.log('imageData:', imageData);
         console.log('imageCompanyLogo:', imageCompanyLogo);
         console.log('imageCompanyLogo1:', imageCompanyLogo1);
         console.log('imageCompanyLogo2:', imageCompanyLogo2);
         console.log('imageGif:', imageGif);
-
+  
         let myFile = null;
         let myFileLogoCompany = null;
         let myFileLogoCompany1 = null;
         let myFileLogoCompany2 = null;
         let myFileGif = null;
-
+  
         if (imageData) {
           const imageBlob = await fetch(`http://backend.test/test/app/public/${imageData.image}`).then(r => r.blob());
           myFile = new File([imageBlob], 'image.jpeg', {
             type: imageBlob.type,
           });
         }
-
+  
         if (imageCompanyLogo) {
           const companyLogoBlob = await fetch(`http://backend.test/test/app/public/${imageCompanyLogo}`).then(r => r.blob());
           myFileLogoCompany = new File([companyLogoBlob], 'companyLogo.jpeg', {
             type: companyLogoBlob.type,
           });
         }
-
+  
         if (imageCompanyLogo1) {
           const companyLogoBlob1 = await fetch(`http://backend.test/test/app/public/${imageCompanyLogo1}`).then(r => r.blob());
           myFileLogoCompany1 = new File([companyLogoBlob1], 'companyLogo1.jpeg', {
             type: companyLogoBlob1.type,
           });
         }
-
+  
         if (imageCompanyLogo2) {
           const companyLogoBlob2 = await fetch(`http://backend.test/test/app/public/${imageCompanyLogo2}`).then(r => r.blob());
           myFileLogoCompany2 = new File([companyLogoBlob2], 'companyLogo2.jpeg', {
             type: companyLogoBlob2.type,
           });
         }
-
+  
         if (imageGif) {
           const gifBlob = await fetch(`http://backend.test/test/app/public/${imageGif}`).then(r => r.blob());
           myFileGif = new File([gifBlob], 'iReview.gif', {
             type: gifBlob.type,
           });
         }
-
+  
         const updatedFormData = {
           ...formData,
-          id: userData.id,
-          name: userData.name,
+          id: userData.id ,
+          name: userData.name ,
           last_name: userData.last_name,
           title: userData.title,
           company: userData.company,
@@ -133,23 +144,30 @@ const EditSignature = () => {
           company_linkedin: userData.company_linkedin,
           feedback: userData.feedback,
         };
-
+  
         setFormData(updatedFormData);
         setLoading(false);
         console.log('Updated FormData:', updatedFormData);
-
+  
       } catch (error) {
         console.error('Error fetching user data:', error);
         setLoading(false);
-        if (error.response && error.response.status === 401) {
-          alert('Session expired. Please log in again.');
-          navigate('/login');
+        if (error.response) {
+          if (error.response.status === 401) {
+            alert('Session expired. Please log in again.');
+            navigate('/login');
+          } else {
+            alert(`Error: ${error.response.data.message || 'Unknown error'}`);
+          }
+        } else {
+          alert('Error: No response from server or unexpected error');
         }
       }
     };
-
+  
     fetchData();
   }, [userId, navigate]);
+  
 
   const handleUpdate = async () => {
     if (!formData.id) {
@@ -205,14 +223,30 @@ const EditSignature = () => {
       }
     }
   };
+  const cropImage = () => {
+    if (cropperRef.current) {
+      const croppedCanvas = cropperRef.current.getCroppedCanvas();
+      croppedCanvas.toBlob((blob) => {
+        setCroppedImage(blob); // Set cropped image as Blob
+      });
+    }
+  };
+
 
   return (
     <>
       <Row>
         <Col md={4}>
-          <UserForm
-            setFormData={setFormData}
+          
+        <UserForm
             formData={formData}
+            setFormData={setFormData}
+            handleFileChange={handleFileChange}
+            handleInputChange={handleInputChange}
+            cropperRef={cropperRef}
+            cropImage={cropImage}
+            showEdit={showEdit}
+            setShowEdit={setShowEdit}
           />
         </Col>
         <Col md={8}>

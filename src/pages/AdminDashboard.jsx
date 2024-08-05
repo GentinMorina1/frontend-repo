@@ -1,18 +1,21 @@
 import React, { useState, useEffect } from "react";
-import { useSelector } from "react-redux";
-import { Link } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
+import { Link, useNavigate } from "react-router-dom";
 import { Line } from "react-chartjs-2";
 import axios from "axios";
 import "chart.js/auto";
 import { Container, Row, Col, Card, Button, ListGroup, Alert } from "react-bootstrap";
 import "../styles/AdminDashboard.css"; // Import the CSS file
+import { logout } from "../features/auth/authSlice"; // Import your logout action
 
 const AdminDashboard = () => {
   const [users, setUsers] = useState([]);
   const [signatures, setSignatures] = useState([]);
   const [error, setError] = useState(null);
   const metrics = useSelector((state) => state.admin.metrics);
-  const token = localStorage.getItem("token"); // Retrieve token from local storage
+  const token = localStorage.getItem("accessToken"); // Retrieve token from local storage
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   // Example data for chart
   const data = {
@@ -100,19 +103,19 @@ const AdminDashboard = () => {
       setError(error.response?.data?.message || "Error deleting signature.");
     }
   };
-  
 
   // Combine signatures with their users
   const usersWithSignatures = users.map(user => ({
     ...user,
     signatures: signatures.filter(sig => sig.user_id === user.id)
   }));
+
   const handleLogout = async () => {
     try {
       await axios.post('http://backend.test/api/logout', {}, {
         headers: {
-          'Authorization': `Bearer ${userToken}`
-        }
+          Authorization: `Bearer ${token}`,
+        },
       });
       dispatch(logout());
       navigate('/login');
@@ -121,13 +124,13 @@ const AdminDashboard = () => {
     }
   };
 
-
   return (
     <Container className="admin-dashboard">
       <Row className="my-4">
         <Col>
           <h2>Admin Dashboard</h2>
           {error && <Alert variant="danger">{error}</Alert>}
+          <Button variant="danger" className="logout-button" onClick={handleLogout}>Logout</Button>
         </Col>
       </Row>
       <Row>
@@ -208,7 +211,7 @@ const AdminDashboard = () => {
       <Row>
         <Col>
           <Card>
-            <Card.Body>
+           {/* <Card.Body>
               <Card.Title>Links</Card.Title>
               <ListGroup>
                 <ListGroup.Item>
@@ -218,7 +221,7 @@ const AdminDashboard = () => {
                   <Link to="/admin/signature-list">Manage Signatures</Link>
                 </ListGroup.Item>
               </ListGroup>
-            </Card.Body>
+            </Card.Body> */}
           </Card>
         </Col>
       </Row>
