@@ -1,12 +1,12 @@
 import React, { useState, useEffect, useRef } from 'react';
-import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Cropper from 'react-cropper';
 import 'cropperjs/dist/cropper.css';
 import UserForm from '../components/UserForm';
 import Signature2 from '../components/Signature2';
+import axiosInstance from '../components/axiosInstance';
 
 const EditSignature = () => {
   const [formData, setFormData] = useState({});
@@ -16,7 +16,13 @@ const EditSignature = () => {
   const navigate = useNavigate();
   const userId = localStorage.getItem('user-id');
   const cropperRef = useRef(null);
+const {id}= useParams();
+ 
 
+
+const token = localStorage.getItem('token');
+const userRole = localStorage.getItem('role-user'); 
+console.log('token', token);
   const handleCrop = () => {
     const cropper = cropperRef.current?.cropper;
     if (cropper) {
@@ -25,10 +31,11 @@ const EditSignature = () => {
       });
     }
   };
+
   const handleFileChange = (e) => {
     const file = e.target.files[0];
     if (file) {
-      setImageFile(file); // Store the file to be cropped
+      setImage(file); // Store the file to be cropped
     }
   };
 
@@ -36,7 +43,9 @@ const EditSignature = () => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
   };
+
   useEffect(() => {
+   
     const fetchData = async () => {
       try {
         const token = localStorage.getItem('token');
@@ -45,110 +54,83 @@ const EditSignature = () => {
           navigate('/login');
           return;
         }
-  
-        const signatureResponse = await axios.get(`http://backend.test/api/signatures/${userId}`, {
+
+        const signatureResponse = await axiosInstance.get(`/signatures/${id}`, {
           headers: {
             'Authorization': `Bearer ${token}`
           }
         });
-        console.log('requrest!!!');
-  
+
         const { signature } = signatureResponse.data;
         setFormData(signature);
-  
-        const userResponse = await axios.get(`http://backend.test/api/users/${userId}`, {
-          headers: {
-            'Authorization': `Bearer ${token}`
-          }
-        });
-  
-        console.log('Full API Response:', userResponse.data);
-  
-        const userData = userResponse.data.user || {};
-        const imageData = userResponse.data.image && userResponse.data.image[0] ? userResponse.data.image[0] : null;
-  
+
+        // const userResponse = await axiosInstance.get(`/users/${id}`, {
+        //   headers: {
+        //     'Authorization': `Bearer ${token}`
+        //   }
+        // });
+
+        const userData = signatureResponse.data.user || {};
+        const imageData = signatureResponse.data.image && signatureResponse.data.image[0] ? signatureResponse.data.image[0] : null;
+
         const imageCompanyLogo = imageData ? imageData.company_logo : null;
         const imageCompanyLogo1 = imageData ? imageData.company_logo1 : null;
         const imageCompanyLogo2 = imageData ? imageData.company_logo2 : null;
-        const imageGif = imageData ? imageData.gif : null;
-  
-        console.log('imageData:', imageData);
-        console.log('imageCompanyLogo:', imageCompanyLogo);
-        console.log('imageCompanyLogo1:', imageCompanyLogo1);
-        console.log('imageCompanyLogo2:', imageCompanyLogo2);
-        console.log('imageGif:', imageGif);
-  
+        // const imageGif = imageData ? imageData.gif : null;
+
         let myFile = null;
         let myFileLogoCompany = null;
         let myFileLogoCompany1 = null;
         let myFileLogoCompany2 = null;
-        let myFileGif = null;
-  
+        // let myFileGif = null;
+
         if (imageData) {
           const imageBlob = await fetch(`http://backend.test/test/app/public/${imageData.image}`).then(r => r.blob());
           myFile = new File([imageBlob], 'image.jpeg', {
             type: imageBlob.type,
           });
         }
-  
+
         if (imageCompanyLogo) {
           const companyLogoBlob = await fetch(`http://backend.test/test/app/public/${imageCompanyLogo}`).then(r => r.blob());
           myFileLogoCompany = new File([companyLogoBlob], 'companyLogo.jpeg', {
             type: companyLogoBlob.type,
           });
         }
-  
+
         if (imageCompanyLogo1) {
           const companyLogoBlob1 = await fetch(`http://backend.test/test/app/public/${imageCompanyLogo1}`).then(r => r.blob());
           myFileLogoCompany1 = new File([companyLogoBlob1], 'companyLogo1.jpeg', {
             type: companyLogoBlob1.type,
           });
         }
-  
+
         if (imageCompanyLogo2) {
           const companyLogoBlob2 = await fetch(`http://backend.test/test/app/public/${imageCompanyLogo2}`).then(r => r.blob());
           myFileLogoCompany2 = new File([companyLogoBlob2], 'companyLogo2.jpeg', {
             type: companyLogoBlob2.type,
           });
         }
-  
-        if (imageGif) {
-          const gifBlob = await fetch(`http://backend.test/test/app/public/${imageGif}`).then(r => r.blob());
-          myFileGif = new File([gifBlob], 'iReview.gif', {
-            type: gifBlob.type,
-          });
-        }
-  
-        const updatedFormData = {
-          ...formData,
-          id: userData.id ,
-          name: userData.name ,
-          last_name: userData.last_name,
-          title: userData.title,
-          company: userData.company,
-          linkedin_profile: userData.linkedin_profile,
-          phone: userData.phone,
-          email: userData.email,
-          facebook: userData.facebook,
-          instagram: userData.instagram,
+
+        // if (imageGif) {
+        //   const gifBlob = await fetch(`http://backend.test/test/app/public/images/${imageGif}`).then(r => r.blob());
+        //   myFileGif = new File([gifBlob], 'iReview.gif', {
+        //     type: gifBlob.type,
+        //   });
+        // }
+
+       const updatedFormData = {
+          ...signature, // Ensure signature data is set first
+          ...userData,
           image: imageData ? myFile : null,
-          description: userData.description,
-          website: userData.website,
-          address: userData.address,
           company_logo: imageCompanyLogo ? myFileLogoCompany : null,
           company_logo1: imageCompanyLogo1 ? myFileLogoCompany1 : null,
           company_logo2: imageCompanyLogo2 ? myFileLogoCompany2 : null,
-          gif: imageGif ? myFileGif : null,
-          meeting_link: userData.meeting_link,
-          twitter: userData.twitter,
-          company_linkedin: userData.company_linkedin,
-          feedback: userData.feedback,
-        };
-  
+          // gif: imageGif ? myFileGif : null,
+        }; 
+
         setFormData(updatedFormData);
         setLoading(false);
-        console.log('Updated FormData:', updatedFormData);
-  
       } catch (error) {
         console.error('Error fetching user data:', error);
         setLoading(false);
@@ -164,10 +146,9 @@ const EditSignature = () => {
         }
       }
     };
-  
+
     fetchData();
-  }, [userId, navigate]);
-  
+  }, [id, navigate]);
 
   const handleUpdate = async () => {
     if (!formData.id) {
@@ -187,28 +168,29 @@ const EditSignature = () => {
     }
 
     try {
-      const token = localStorage.getItem('token');
+
       if (!token) {
         alert('No authentication token found.');
         navigate('/login');
         return;
       }
-
-      fd.append('_method', 'PUT'); // Ensure method override is included
-
-      const response = await axios.post(
-        `http://backend.test/api/signature/${userId}`,
-        fd,
-        {
+// console.log('id', id);
+      fd.append('_method', 'PUT');     
+      const response = await axiosInstance.post(
+        `/signature-update/${id}`, fd, {
           headers: {
             'Content-Type': 'multipart/form-data',
             'Authorization': `Bearer ${token}`
           },
         }
       );
-
       alert('Signature updated successfully!');
-      navigate('/user-dashboard');
+      if (userRole === 'admin') {
+        navigate('/admin-dashboard');
+      } else if (userRole === 'user') {
+        navigate(`/user-dashboard/${id}`);
+      } 
+      // navigate(`/user-dashboard/${id}`);
     } catch (error) {
       console.error('Axios Error:', error);
       if (error.response) {
@@ -223,22 +205,21 @@ const EditSignature = () => {
       }
     }
   };
+
   const cropImage = () => {
     if (cropperRef.current) {
       const croppedCanvas = cropperRef.current.getCroppedCanvas();
       croppedCanvas.toBlob((blob) => {
-        setCroppedImage(blob); // Set cropped image as Blob
+        setFormData(prev => ({ ...prev, croppedImage: blob }));
       });
     }
   };
-
 
   return (
     <>
       <Row>
         <Col md={4}>
-          
-        <UserForm
+          <UserForm
             formData={formData}
             setFormData={setFormData}
             handleFileChange={handleFileChange}

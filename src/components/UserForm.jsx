@@ -6,8 +6,9 @@ import "cropperjs/dist/cropper.css";
 import React, { useState, useRef, memo, useEffect } from "react";
 import Cropper from "react-cropper";
 import axios from "axios";
-import { width } from "@fortawesome/free-brands-svg-icons/fa42Group";
-import { useNavigate } from "react-router-dom";
+// import { width } from "@fortawesome/free-brands-svg-icons/fa42Group";
+import { useNavigate, useParams } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
 
 axios.defaults.baseURL = "http://backend.test/api/users";
 axios.defaults.headers.post["Content-Type"] = "multipart/form-data";
@@ -93,7 +94,8 @@ export default function UserForm({
    const formDataCompanyLogoRef2= useRef();
    const formDataGifRef = useRef(null);
    const navigate = useNavigate();
-
+   const dispatch = useDispatch();
+const {id} = useParams();
 
 
 
@@ -103,6 +105,8 @@ export default function UserForm({
   });
   const [userId, setUserId] = useState(null);
 
+
+  const role = useSelector((state) => state.auth.role);
 
   useEffect(()=>{
     if(formData?.image){
@@ -144,13 +148,13 @@ export default function UserForm({
     }
 
   },[formData?.company_logo2]);
-  useEffect(()=>{
-    if(formData?.gif){
-      let listTransfer = new DataTransfer();
-      listTransfer.items.add(formData.gif);
-      formDataGifRef.current.files = listTransfer.files;
-    }
-  },[formData?.gif]);
+  // useEffect(()=>{
+  //   if(formData?.gif){
+  //     let listTransfer = new DataTransfer();
+  //     listTransfer.items.add(formData.gif);
+  //     formDataGifRef.current.files = listTransfer.files;
+  //   }
+  // },[formData?.gif]);
 
   const validateEmail = (email) => {
     return String(email)
@@ -160,9 +164,9 @@ export default function UserForm({
       );
   };
 
-  const handleCrop = (croppedImage) => {
-    setFormData({ ...formData, croppedImage });
-  };
+  // const handleCrop = (croppedImage) => {
+  //   setFormData({ ...formData, croppedImage });
+  // };
 
   function handleInputBlur(e) {
     const nameInput = e.target.name;
@@ -188,7 +192,6 @@ export default function UserForm({
     e.preventDefault();
 
     const fd = new FormData();
-
     fd.append("image", formData.croppedImage);
     fd.append("name", formData.name);
     fd.append("last_name", formData.last_name);
@@ -213,30 +216,49 @@ export default function UserForm({
     fd.append("id", formData.id);
 
     try {
-      const token = localStorage.getItem('token'); // Ensure you have the token stored in localStorage
-      const response = await axios.post('http://backend.test/api/signature/store', fd, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-          'Authorization': `Bearer ${token}`,
-        },
-      });
-      console.log(response.data);
-      alert("Form submitted successfully!");
-      navigate('/user-dashboard'); // Navigate to the user dashboard
+        const token = localStorage.getItem('token');
+        const response = await axios.post('http://backend.test/api/signature/store', fd, {
+            headers: {
+                'Content-Type': 'multipart/form-data',
+                'Authorization': `Bearer ${token}`,
+            },
+        });
+
+        // Extract access_token and role from the response
+        // const { access_token, role } = response.data;
+
+        // // Save the access_token and role to localStorage
+        // window.localStorage['token'] = access_token;
+        // window.localStorage['role-user'] = role;
+
+        // console.log('User role:', role);
+
+        // Navigate based on role
+        if (response.status === 200) {
+          if (role === 'admin') {
+            navigate('/admin-dashboard');
+          } else {
+            navigate(`/user-dashboard/${id}`);
+          }
+        }
+
+        alert("Form submitted successfully!");
 
     } catch (error) {
-      console.error("Axios Error:", error);
-      if (error.response) {
-        console.error("Server Error:", error.response.data);
-      } else if (error.request) {
-        console.error("No response from server:", error.request);
-      } else {
-        console.error("Request error:", error.message);
-      }
+        console.error("Axios Error:", error);
+        if (error.response) {
+            console.error("Server Error:", error.response.data);
+        } else if (error.request) {
+            console.error("No response from server:", error.request);
+        } else {
+            console.error("Request error:", error.message);
+        }
     }
-  
+
     setShowEdit(false);
-  };
+};
+
+  
   const openLinkedInProfile = () => {
     window.open("https://www.linkedin.com/", "_blank");
   };
@@ -470,15 +492,15 @@ export default function UserForm({
             }}
           />
 
-          <label htmlFor="gif">Gif </label>
+          <label htmlFor="gif">IReview </label>
           <Form.Control
             className="input-form"
-            type="file"
+            type="url"
             name="gif"
             placeholder="Gif"
             ref={formDataGifRef}
             onChange={(e) => {
-              setFormData({ ...formData, gif: e.target.files[0] });
+              setFormData({ ...formData, gif: e.target.value });
             }}
           />
           <ReactQuill

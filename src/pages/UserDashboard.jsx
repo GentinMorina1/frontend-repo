@@ -1,9 +1,10 @@
 import React, { useState, useEffect, useRef } from "react";
-import axios from "axios";
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { logout } from '../features/auth/authSlice';
+import { Container, Row, Col, Card, Button, ListGroup, Alert } from "react-bootstrap";
 import '../styles/UserDashboard.css';
+import axiosInstance from "../components/axiosInstance";
 
 export default function UserDashboard() {
   const [signatures, setSignatures] = useState([]);
@@ -12,27 +13,30 @@ export default function UserDashboard() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const auth = useSelector((state) => state.auth);
-  const userToken = auth.token;
-  const userId = window.localStorage.getItem('user-id');
+  const userToken = auth.token || window.localStorage.getItem('token'); // Ensure token is available
+  const userId = window.localStorage.getItem('user-id'); // Ensure user ID is available
   const hiddenSignatureRef = useRef(null);
+const {id}= useParams();
+console.log('id from params', id);
 
   useEffect(() => {
     const fetchSignatures = async () => {
       try {
-        const response = await axios.get(`http://backend.test/api/signatures/${userId}`, {
+        const response = await axiosInstance.get(`/signature/me`, {
           headers: {
             'Authorization': `Bearer ${userToken}`
           }
         });
-        console.log("API Response:", response.data);
         
-        if (response.data.signature) {
-          setSignatures([response.data.signature]);
+        console.log("API Response:", response.data);
+    
+        // Check if signatures exist and are in the expected format
+        if (Array.isArray(response.data.signatures)) {
+          setSignatures(response.data.signatures);
         } else {
           console.warn("Unexpected response structure:", response.data);
           setSignatures([]);
         }
-
         setLoading(false);
       } catch (error) {
         setError('Error fetching signatures. Please try again later.');
@@ -40,15 +44,16 @@ export default function UserDashboard() {
         console.error("Error fetching signatures:", error);
       }
     };
+    
 
-    if (userToken) {
+    if (userToken && userId) {
       fetchSignatures();
     } else {
-      console.error("User token not found.");
+      console.error("User token or ID not found.");
       navigate('/login');
     }
-  }, [userToken, navigate, userId]);
-
+  }, [id, userToken, navigate]);
+console.log('Signature State:', signatures);
   const handleCreateSignature = () => {
     navigate('/create-signature');
   };
@@ -56,15 +61,49 @@ export default function UserDashboard() {
   const handleEditClick = (id) => {
     navigate(`/edit-signature/${id}`);
   };
+  const handleDeleteUser = async (userId) => {
+    try {
+      const response = await axiosInstance.delete(`/delete-user/${userId}`, {
+        headers: { Authorization: `Bearer ${userToken}` },
+      });
+      if (response.status === 200 || response.status === 204) {
+        setUsers(users.filter((user) => user.id !== userId));
+        setSignatures(signatures.filter((sig) => sig.user_id !== userId));
+      } else {
+        setError("Failed to delete user.");
+      }
+    } catch (error) {
+      console.error("Error deleting user:", error.response?.data || error.message);
+      setError("Error deleting user.");
+    }
+  };
 
+  const handleDeleteSignature = async (signatureId) => {
+    try {
+      const response = await axiosInstance.delete(`/signature/${signatureId}`, {
+        headers: { Authorization: `Bearer ${userToken}` },
+      });
+      if (response.status === 200 || response.status === 204) {
+        setSignatures(signatures.filter((sig) => sig.id !== signatureId));
+      } else {
+        setError("Failed to delete signature.");
+      }
+    } catch (error) {
+      console.error("Error deleting signature:", error.response?.data || error.message);
+      setError("Error deleting signature.");
+    }
+  };
   const handleLogout = async () => {
     try {
-      await axios.post('http://backend.test/api/logout', {}, {
+      await axiosInstance.post('/logout', {}, {
         headers: {
           'Authorization': `Bearer ${userToken}`
         }
       });
       dispatch(logout());
+      window.localStorage.removeItem('token');
+      window.localStorage.removeItem('role-user');
+      window.localStorage.removeItem('user-id');
       navigate('/login');
     } catch (error) {
       console.error('Logout Error:', error.response?.data || error.message);
@@ -90,27 +129,38 @@ export default function UserDashboard() {
         </div>
       </header>
       <main className="signature-list">
-        {loading ? (
-          <p>Loading...</p>
-        ) : error ? (
-          <p className="error-message">{error}</p>
-        ) : signatures.length > 0 ? (
-          signatures.map(signature => (
-            <div key={signature.id} className="signature-card">
-              <h2>{signature.name} {signature.last_name}</h2>
-              <div
-                ref={hiddenSignatureRef}
-                style={{ display: 'none' }}
-                dangerouslySetInnerHTML={{ __html: signature.html_content }} // Assuming signature.html_content contains the HTML structure
-              />
-              <button className="edit-button" onClick={() => handleEditClick(signature.id)}>Edit</button>
-              <button className="copy-button" onClick={() => handleCopy(signature)}>Copy</button>
-            </div>
-          ))
-        ) : (
-          <p className="no-signatures">No signatures found.</p>
-        )}
-      </main>
+   {loading ? (
+  <p>Loading...</p>
+) : error ? (
+  <p className="error-message">{error}</p>
+) : signatures.length > 0 ? (
+  signatures.map(signature => (
+    <div key={signature.id} className="signature-card">
+      <h2>{signature.name} {signature.last_name}</h2>
+      <div
+        ref={hiddenSignatureRef}
+        style={{ display: 'none' }}
+        dangerouslySetInnerHTML={{ __html: signature.html_content }}
+      />
+  <Button
+                                  variant="danger"
+                                  size="sm"
+                                  className="mr-2"
+                                  onClick={() => handleDeleteSignature(signature.id)}
+                                >
+                                  Delete Signature
+                                </Button>
+      <button className="edit-button" onClick={() => handleEditClick(signature.id)}>Edit</button>
+      <button className="copy-button" onClick={() => handleCopy(signature)}>Copy</button>
+    </div>
+  ))
+) : (
+  <p className="no-signatures">No signatures found.</p>
+)}
+
+</main>
+
+
     </div>
   );
 }

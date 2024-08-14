@@ -17,10 +17,11 @@ import ProfileSettings from "./pages/ProfileSettings";
 import AdminRoute from "./components/AdminRoute"; // Protecting admin routes
 import PrivateRoute from "./components/PrivateRoute"; // Protecting user routes
 import AdminDashboard from "./pages/AdminDashboard";
-import CreateSignature from './components/CreateSignature'; // Adjust the path if necessary
-import Register from "./components/Register";
-import SignatureList from "./components/SignatureList"; // Import the component for the new route
+import CreateSignature from './pages/CreateSignature'; 
+import Register from "./pages/Register";
+import SignatureList from "./components/SignatureList"; 
 import EditSignature from "./components/EditSignature";
+import SignatureDisplay from "./components/SignatureDisplay";
 
 // Define your routes
 const router = createBrowserRouter([
@@ -33,11 +34,17 @@ const router = createBrowserRouter([
   { path: "/edit/:id", element: <AdminRoute><Edit /></AdminRoute> },
   { path: "/admin-panel", element: <AdminRoute><AdminPanel /></AdminRoute> },
   { path: "/admin/user-list", element: <AdminRoute><UserList /></AdminRoute> },
-  { path: "/user-dashboard", element: <PrivateRoute><UserDashboard /></PrivateRoute> },
+  { path: "/admin/edit-signature/:id", element: <AdminRoute><EditSignature /></AdminRoute> }, 
+  { path: "/user-dashboard ", element: <PrivateRoute><UserDashboard /></PrivateRoute> },
   { path: "/profile-settings", element: <PrivateRoute><ProfileSettings /></PrivateRoute> },
   { path: "/edit-signature/:id", element: <PrivateRoute><EditSignature /></PrivateRoute> },
   { path: "/create-signature", element: <PrivateRoute><CreateSignature /></PrivateRoute> },
-  { path: "/admin/signature-list", element: <AdminRoute><SignatureList /></AdminRoute> } // Add the new route here
+  { path: "/admin/signature-list", element: <AdminRoute><SignatureList /></AdminRoute> }, 
+  { path: "/signature/:id", element: <SignatureDisplay /> },
+  { path: "/user-dashboard/:id", element: <PrivateRoute><UserDashboard /></PrivateRoute> }
+
+
+
 ]);
 
 function App() {

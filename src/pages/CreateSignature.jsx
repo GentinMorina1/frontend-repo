@@ -1,16 +1,15 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { Col, Row } from 'react-bootstrap';
-import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import Cropper from 'react-cropper';
+import axiosInstance from '../components/axiosInstance';
+import Signature2 from '../components/Signature2';
+import UserForm from '../components/UserForm';
 import 'cropperjs/dist/cropper.css';
 import 'react-quill/dist/quill.snow.css';
-import Signature2 from './Signature2';
-import UserForm from './UserForm';
 
 const CreateSignature = () => {
-  const { token } = useSelector((state) => state.auth);
+  const { token, user } = useSelector((state) => state.auth);
   const [formData, setFormData] = useState({
     id: null,
     name: "",
@@ -43,6 +42,7 @@ const CreateSignature = () => {
   const [activeComponent, setActiveComponent] = useState('');
   const cropperRef = useRef(null);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const handleFileChange = (e) => {
     const file = e.target.files[0];
@@ -68,32 +68,32 @@ const CreateSignature = () => {
     }
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  // const handleSubmit = async (e) => {
+  //   e.preventDefault();
 
-    try {
-      const fd = new FormData();
-      fd.append('email', formData.email);
-      if (croppedImage) {
-        fd.append('image', croppedImage, 'signature.png'); // Naming the file as 'signature.png'
-      }
-      // Append other necessary fields to fd here
+  //   try {
+  //     const fd = new FormData();
+  //     fd.append('email', formData.email);
+  //     if (croppedImage) {
+  //       fd.append('image', croppedImage, 'signature.png'); // Naming the file as 'signature.png'
+  //     }
+  //     // Append other necessary fields to fd here
 
-      const response = await axios.post('http://backend.test/api/signature/store', fd, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-          'Authorization': `Bearer ${token}`,
-        },
-      });
-
-      alert('Signature created successfully!');
-      generateSignatureHTML();
-      navigate('/user-dashboard');
-    } catch (error) {
-      console.error('Error in handleSubmit:', error);
-      alert('Failed to create signature. Please try again.');
-    }
-  };
+  //     const response = await axiosInstance.post('/signature/store', fd, {
+  //       headers: {
+  //         'Content-Type': 'multipart/form-data',
+  //         'Authorization': `Bearer ${token}`,
+  //       },
+  //     });
+    
+      
+  //     alert('Signature created successfully!');
+  //     generateSignatureHTML();
+  //   } catch (error) {
+  //     console.error('Error in handleSubmit:', error);
+  //     alert('Failed to create signature. Please try again.');
+  //   }
+  // };
 
   const cropImage = () => {
     if (cropperRef.current) {
@@ -171,13 +171,11 @@ const CreateSignature = () => {
               showEdit={showEdit}
               setShowEdit={setShowEdit}
               copyToClipboard={copyToClipboard}
+              croppedImage={formData.croppedImage}
+
             />
           </div>
           <h2></h2>
-          {/* <form onClick={handleSubmit}>
-            <button type="submit">Submit</button>
-          </form> */}
-          <button onClick={generateSignatureHTML}>Generate Signature HTML</button>
           {signatureHTML && (
             <div>
               <button onClick={copyToClipboard}>Copy to Clipboard</button>

@@ -1,107 +1,77 @@
 import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { Line } from "react-chartjs-2";
-import axios from "axios";
 import "chart.js/auto";
 import { Container, Row, Col, Card, Button, ListGroup, Alert } from "react-bootstrap";
 import "../styles/AdminDashboard.css"; // Import the CSS file
 import { logout } from "../features/auth/authSlice"; // Import your logout action
+import axiosInstance from '../components/axiosInstance';
 
 const AdminDashboard = () => {
   const [users, setUsers] = useState([]);
   const [signatures, setSignatures] = useState([]);
   const [error, setError] = useState(null);
-  const metrics = useSelector((state) => state.admin.metrics);
   const token = localStorage.getItem("accessToken"); // Retrieve token from local storage
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const { id } = useParams();
 
   // Example data for chart
-  const data = {
-    labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul"],
-    datasets: [
-      {
-        label: "Signatures",
-        data: metrics.signaturesPerMonth, // Array of signature counts per month
-        borderColor: "rgba(75,192,192,1)",
-        backgroundColor: "rgba(75,192,192,0.2)",
-      },
-    ],
-  };
+ 
 
   useEffect(() => {
-    // Fetch users
-    const fetchUsers = async () => {
+    // Fetch users and signatures
+    const fetchData = async () => {
       try {
-        const response = await axios.get("http://backend.test/api/get-users", {
-          headers: {
-            Authorization: `Bearer ${token}`, // Include token if needed
-          },
+        const userResponse = await axiosInstance.get("/get-users", {
+          headers: { Authorization: `Bearer ${token}` },
         });
-        setUsers(response.data.users || []);
+        setUsers(userResponse.data.users || []);
       } catch (error) {
-        console.error("Error fetching users:", error);
+        console.error("Error fetching users:", error.response?.data || error.message);
         setError("Error fetching users.");
       }
-    };
 
-    // Fetch signatures
-    const fetchSignatures = async () => {
       try {
-        const response = await axios.get("http://backend.test/api/get-signatures", {
-          headers: {
-            Authorization: `Bearer ${token}`, // Include token if needed
-          },
+        const signatureResponse = await axiosInstance.get("/get-signatures", {
+          headers: { Authorization: `Bearer ${token}` },
         });
-        setSignatures(response.data.signatures || []);
+        setSignatures(signatureResponse.data.signatures || []);
       } catch (error) {
-        console.error("Error fetching signatures:", error);
+        console.error("Error fetching signatures:", error.response?.data || error.message);
         setError("Error fetching signatures.");
       }
     };
 
-    fetchUsers();
-    fetchSignatures();
+    fetchData();
   }, [token]);
 
-  const handleDeleteUser = async (userId) => {
-    try {
-      const response = await axios.delete(`http://backend.test/api/delete-user/${userId}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      if (response.status === 200 || response.status === 204) {
-        setUsers(users.filter((user) => user.id !== userId));
-        setSignatures(signatures.filter((sig) => sig.user_id !== userId));
-      } else {
-        console.error("Failed to delete user:", response);
-        setError("Failed to delete user.");
-      }
-    } catch (error) {
-      console.error("Error deleting user:", error);
-      setError(error.response?.data?.message || "Error deleting user.");
-    }
-  };
   
+
   const handleDeleteSignature = async (signatureId) => {
     try {
-      const response = await axios.delete(`http://backend.test/api/signature/${signatureId}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
+      const response = await axiosInstance.delete(`/signature/${signatureId}`, {
+        headers: { Authorization: `Bearer ${token}` },
       });
       if (response.status === 200 || response.status === 204) {
         setSignatures(signatures.filter((sig) => sig.id !== signatureId));
       } else {
-        console.error("Failed to delete signature:", response);
         setError("Failed to delete signature.");
       }
     } catch (error) {
-      console.error("Error deleting signature:", error);
-      setError(error.response?.data?.message || "Error deleting signature.");
+      console.error("Error deleting signature:", error.response?.data || error.message);
+      setError("Error deleting signature.");
     }
+  };
+
+  const handleCopyLink = (userId) => {
+    const link = `${window.location.origin}/signature/${userId}.html`;
+    navigator.clipboard.writeText(link).then(() => {
+      alert('Link copied to clipboard!');
+    }).catch((err) => {
+      console.error('Failed to copy link:', err);
+    });
   };
 
   // Combine signatures with their users
@@ -110,12 +80,14 @@ const AdminDashboard = () => {
     signatures: signatures.filter(sig => sig.user_id === user.id)
   }));
 
+  const handleCreateSignature = () => {
+    navigate('/create-signature');
+  };
+
   const handleLogout = async () => {
     try {
-      await axios.post('http://backend.test/api/logout', {}, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
+      await axiosInstance.post('/logout', {}, {
+        headers: { Authorization: `Bearer ${token}` },
       });
       dispatch(logout());
       navigate('/login');
@@ -130,29 +102,15 @@ const AdminDashboard = () => {
         <Col>
           <h2>Admin Dashboard</h2>
           {error && <Alert variant="danger">{error}</Alert>}
+          <Button className="create-button" onClick={handleCreateSignature}>Create New Signature</Button>
           <Button variant="danger" className="logout-button" onClick={handleLogout}>Logout</Button>
         </Col>
       </Row>
       <Row>
         <Col md={4}>
-          <Card className="mb-4">
-            <Card.Body>
-              <Card.Title>Metrics</Card.Title>
-              <Card.Text>
-                <p>Total Signatures: {metrics.totalSignatures}</p>
-                <p>Total Users: {metrics.totalUsers}</p>
-              </Card.Text>
-            </Card.Body>
-          </Card>
+         
         </Col>
-        <Col md={8}>
-          <Card className="mb-4">
-            <Card.Body>
-              <Card.Title>Signatures Over Time</Card.Title>
-              <Line data={data} />
-            </Card.Body>
-          </Card>
-        </Col>
+       
       </Row>
       <Row>
         <Col>
@@ -178,11 +136,19 @@ const AdminDashboard = () => {
                                 >
                                   Delete Signature
                                 </Button>
-                                <Link to={`/admin/edit-signature/${signature.id}`}>
+                                <Link to={`/edit-signature/${signature.id}`}>
                                   <Button variant="primary" size="sm">
                                     Edit Signature
                                   </Button>
                                 </Link>
+                                <Button
+                                  variant="secondary"
+                                  size="sm"
+                                  className="ml-2"
+                                  onClick={() => handleCopyLink(signature.id)}
+                                >
+                                  Copy Link
+                                </Button>
                               </div>
                             </ListGroup.Item>
                           ))
@@ -205,23 +171,6 @@ const AdminDashboard = () => {
                 <p>No users found.</p>
               )}
             </Card.Body>
-          </Card>
-        </Col>
-      </Row>
-      <Row>
-        <Col>
-          <Card>
-           {/* <Card.Body>
-              <Card.Title>Links</Card.Title>
-              <ListGroup>
-                <ListGroup.Item>
-                  <Link to="/admin/user-list">Manage Users</Link>
-                </ListGroup.Item>
-                <ListGroup.Item>
-                  <Link to="/admin/signature-list">Manage Signatures</Link>
-                </ListGroup.Item>
-              </ListGroup>
-            </Card.Body> */}
           </Card>
         </Col>
       </Row>
