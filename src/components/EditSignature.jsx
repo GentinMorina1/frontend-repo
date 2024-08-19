@@ -85,28 +85,28 @@ console.log('token', token);
         // let myFileGif = null;
 
         if (imageData) {
-          const imageBlob = await fetch(`http://backend.test/test/app/public/${imageData.image}`).then(r => r.blob());
+          const imageBlob = await fetch(`http://backend.test/test/app/public/images/${imageData.image}`).then(r => r.blob());
           myFile = new File([imageBlob], 'image.jpeg', {
             type: imageBlob.type,
           });
         }
 
         if (imageCompanyLogo) {
-          const companyLogoBlob = await fetch(`http://backend.test/test/app/public/${imageCompanyLogo}`).then(r => r.blob());
+          const companyLogoBlob = await fetch(`http://backend.test/test/app/public/images/${imageCompanyLogo}`).then(r => r.blob());
           myFileLogoCompany = new File([companyLogoBlob], 'companyLogo.jpeg', {
             type: companyLogoBlob.type,
           });
         }
 
         if (imageCompanyLogo1) {
-          const companyLogoBlob1 = await fetch(`http://backend.test/test/app/public/${imageCompanyLogo1}`).then(r => r.blob());
+          const companyLogoBlob1 = await fetch(`http://backend.test/test/app/public/images/${imageCompanyLogo1}`).then(r => r.blob());
           myFileLogoCompany1 = new File([companyLogoBlob1], 'companyLogo1.jpeg', {
             type: companyLogoBlob1.type,
           });
         }
 
         if (imageCompanyLogo2) {
-          const companyLogoBlob2 = await fetch(`http://backend.test/test/app/public/${imageCompanyLogo2}`).then(r => r.blob());
+          const companyLogoBlob2 = await fetch(`http://backend.test/test/app/public/images/${imageCompanyLogo2}`).then(r => r.blob());
           myFileLogoCompany2 = new File([companyLogoBlob2], 'companyLogo2.jpeg', {
             type: companyLogoBlob2.type,
           });

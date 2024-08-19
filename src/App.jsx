@@ -7,11 +7,8 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Edit from "./pages/Edit";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
-import Sidebar from "./components/Sidebar";
 import Dashboard from "./pages/Dashboard";
 import AdminPanel from "./pages/AdminPanel";
-import UserList from "./components/UserList";
-import UserEdit from "./components/UserEdit";
 import UserDashboard from "./pages/UserDashboard";
 import ProfileSettings from "./pages/ProfileSettings";
 import AdminRoute from "./components/AdminRoute"; // Protecting admin routes
@@ -27,13 +24,13 @@ import SignatureDisplay from "./components/SignatureDisplay";
 const router = createBrowserRouter([
   { path: "/home", element: <Home /> },
   { path: "/login", element: <Login /> },
-  { path: "/sidebar", element: <Sidebar /> },
+  // { path: "/sidebar", element: <Sidebar /> },
   { path: "/register", element: <Register /> },
   { path: "/dashboard", element: <Dashboard /> },
   { path: "/admin-dashboard", element: <AdminRoute><AdminDashboard /></AdminRoute> },
   { path: "/edit/:id", element: <AdminRoute><Edit /></AdminRoute> },
   { path: "/admin-panel", element: <AdminRoute><AdminPanel /></AdminRoute> },
-  { path: "/admin/user-list", element: <AdminRoute><UserList /></AdminRoute> },
+  // { path: "/admin/user-list", element: <AdminRoute><UserList /></AdminRoute> },
   { path: "/admin/edit-signature/:id", element: <AdminRoute><EditSignature /></AdminRoute> }, 
   { path: "/user-dashboard ", element: <PrivateRoute><UserDashboard /></PrivateRoute> },
   { path: "/profile-settings", element: <PrivateRoute><ProfileSettings /></PrivateRoute> },

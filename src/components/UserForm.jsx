@@ -412,17 +412,22 @@ const {id} = useParams();
             />
           </Form.Group>
           <Form.Control
-            className="input-form"
-            name="phone"
-            required
-            type="text"
-            inputmode="numeric"
-            placeholder="Phone"
-            value={formData.phone}
-            onChange={(e) => {
-              setFormData({ ...formData, phone: e.target.value });
-            }}
-          />
+  className="input-form"
+  name="phone"
+  required
+  type="text"
+  inputMode="numeric"
+  pattern="[0-9+]*"
+  placeholder="Phone"
+  value={formData.phone}
+  onChange={(e) => {
+    // Allow only numbers and the + sign
+    const value = e.target.value;
+    const filteredValue = value.replace(/[^0-9+]/g, '');
+    setFormData({ ...formData, phone: filteredValue });
+  }}
+/>
+
           <Form.Control
             className="input-form"
             required

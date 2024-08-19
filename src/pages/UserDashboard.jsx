@@ -61,22 +61,7 @@ console.log('Signature State:', signatures);
   const handleEditClick = (id) => {
     navigate(`/edit-signature/${id}`);
   };
-  const handleDeleteUser = async (userId) => {
-    try {
-      const response = await axiosInstance.delete(`/delete-user/${userId}`, {
-        headers: { Authorization: `Bearer ${userToken}` },
-      });
-      if (response.status === 200 || response.status === 204) {
-        setUsers(users.filter((user) => user.id !== userId));
-        setSignatures(signatures.filter((sig) => sig.user_id !== userId));
-      } else {
-        setError("Failed to delete user.");
-      }
-    } catch (error) {
-      console.error("Error deleting user:", error.response?.data || error.message);
-      setError("Error deleting user.");
-    }
-  };
+
 
   const handleDeleteSignature = async (signatureId) => {
     try {
@@ -118,7 +103,14 @@ console.log('Signature State:', signatures);
       console.error('Failed to copy signature: ', err);
     });
   };
-
+  const handleCopyLink = (userId) => {
+    const link = `${window.location.origin}/signature/${userId}.html`;
+    navigator.clipboard.writeText(link).then(() => {
+      alert('Link copied to clipboard!');
+    }).catch((err) => {
+      console.error('Failed to copy link:', err);
+    });
+  };
   return (
     <div className="user-dashboard">
       <header className="dashboard-header">
@@ -151,7 +143,7 @@ console.log('Signature State:', signatures);
                                   Delete Signature
                                 </Button>
       <button className="edit-button" onClick={() => handleEditClick(signature.id)}>Edit</button>
-      <button className="copy-button" onClick={() => handleCopy(signature)}>Copy</button>
+      <button className="copy-button" onClick={() => handleCopyLink(signature.id)}>Copy</button>
     </div>
   ))
 ) : (

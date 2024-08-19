@@ -19,6 +19,7 @@ export default function Signature2({
   copyToClipboard,
 }) {
   // Render image preview
+  
   const renderImagePreview = (imageSrc) => (
     <img
       className="img-preview"
@@ -56,7 +57,7 @@ export default function Signature2({
 
         <div className="signature-details2">
           <div>
-            <span className="username2" style={{ fontSize: "15px", fontWeight: "bold" }}>
+            <span className="username2" style={{ fontSize: "13px", fontWeight: "bold" }}>
               {formData.name} {formData.last_name}
             </span>{" "}
             <p className="title-company2">

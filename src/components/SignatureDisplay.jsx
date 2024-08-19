@@ -39,18 +39,18 @@ const SignatureDisplay = () => {
         const imageCompanyLogo2 = imageData ? imageData.company_logo2 : null;
 
         const imageUrls = {
-          image: imageData ? `http://backend.test/test/app/public/${imageData.image}` : null,
-          company_logo: imageCompanyLogo ? `http://backend.test/test/app/public/${imageCompanyLogo}` : null,
-          company_logo1: imageCompanyLogo1 ? `http://backend.test/test/app/public/${imageCompanyLogo1}` : null,
-          company_logo2: imageCompanyLogo2 ? `http://backend.test/test/app/public/${imageCompanyLogo2}` : null,
+          image: imageData ? `http://backend.test/test/app/public/images/${imageData.image}` : null,
+          company_logo: imageCompanyLogo ? `http://backend.test/test/app/public/images/${imageCompanyLogo}` : null,
+          company_logo1: imageCompanyLogo1 ? `http://backend.test/test/app/public/images/${imageCompanyLogo1}` : null,
+          company_logo2: imageCompanyLogo2 ? `http://backend.test/test/app/public/images/${imageCompanyLogo2}` : null,
         };
         console.log(imageUrls);
         const updatedFormData = {
           ...userData,
-          croppedImage: imageData ? `http://backend.test/test/app/public/${imageData.image}` : null,
-        company_logo: imageData ? `http://backend.test/test/app/public/${imageData.company_logo}` : null,
-        company_logo1: imageData ? `http://backend.test/test/app/public/${imageData.company_logo1}` : null,
-        company_logo2: imageData ? `http://backend.test/test/app/public/${imageData.company_logo2}` : null,
+          croppedImage: imageData ? `http://backend.test/test/app/public/images/${imageData.image}` : null,
+        company_logo: imageData ? `http://backend.test/test/app/public/images/${imageData.company_logo}` : null,
+        company_logo1: imageData ? `http://backend.test/test/app/public/images/${imageData.company_logo1}` : null,
+        company_logo2: imageData ? `http://backend.test/test/app/public/images/${imageData.company_logo2}` : null,
         ...response.data.html_content
         };
 
@@ -83,7 +83,7 @@ const SignatureDisplay = () => {
     }
   };
   return (
-    <Container>
+    <Container style={{ marginLeft: '8px', marginTop: '8px', padding: '0px' }}>
       <Signature2
         formData={htmlContent}
         setFormData={setFormData}
